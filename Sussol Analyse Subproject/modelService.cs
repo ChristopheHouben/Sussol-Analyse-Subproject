@@ -38,7 +38,6 @@ namespace Sussol_Analyse_Subproject
 
         string feature = "";
         string filename = "";
-        int currentModelAmount;
         DirectoryInfo di = Directory.CreateDirectory(dedicatedMapPath);
         DirectoryInfo diCsv = Directory.CreateDirectory(Path.Combine(dedicatedMapCsvPath));
         DirectoryInfo diRaw = Directory.CreateDirectory(Path.Combine(dedicatedMapRawDataPath));
@@ -132,8 +131,8 @@ namespace Sussol_Analyse_Subproject
             {
                 set = dataset.Split('\\').Last();
             }
-                training.dataSet = dataset;
-                string datasetFinal = File.ReadAllText(training.dataSet);
+               // training.dataSet = dataset;
+                string datasetFinal = File.ReadAllText(dataset);
                 JObject jObject = new JObject();
                 string algorithmtype = ((AlgorithmName)algorithm).ToString();
             
@@ -143,7 +142,7 @@ namespace Sussol_Analyse_Subproject
                 }
 
 
-                int counter = 0;
+                int amountOfModels = 0;
                 int length = 0;
                 switch (algorithm)
                 {
@@ -157,11 +156,11 @@ namespace Sussol_Analyse_Subproject
                                 jObject = JObject.Parse(model);
                                 JArray items = (JArray)jObject["clusters"];
                                 length = items.Count;
-                                counter++;
+                            amountOfModels++;
                             if (length == desiredClusters)
                                 {featuresDesiredClusters.Add(feature);}
                             results.Add(length);
-                            worker.ReportProgress(counter);
+                            worker.ReportProgress(amountOfModels);
                             if (format.Equals("text"))
                                 {
                                     feature = "Dataset_" + dataset + "_Varied parameters_numberOfClusters_value_is_" + paramN + ".txt";
@@ -183,8 +182,8 @@ namespace Sussol_Analyse_Subproject
 
                         }
                         results.Add(length);
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         if (format.Equals("text"))
                             {
 
@@ -208,8 +207,8 @@ namespace Sussol_Analyse_Subproject
 
                             }
                             results.Add(length);
-                            counter++;
-                            worker.ReportProgress(counter);
+                            amountOfModels++;
+                            worker.ReportProgress(amountOfModels);
                             if (format.Equals("text"))
                                 {
 
@@ -236,8 +235,8 @@ namespace Sussol_Analyse_Subproject
 
                             }
                             results.Add(length);
-                            counter++;
-                            worker.ReportProgress(counter);
+                            amountOfModels++;
+                            worker.ReportProgress(amountOfModels);
                             if (format.Equals("text"))
                                 {
 
@@ -259,8 +258,8 @@ namespace Sussol_Analyse_Subproject
                         jObject = JObject.Parse(sus.somModeller(datasetFinal, oString.Replace(',', '.'), "", "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         results.Add(length);
                         if (length == desiredClusters)
                         {
@@ -284,8 +283,8 @@ namespace Sussol_Analyse_Subproject
                         jObject = JObject.Parse(sus.somModeller(datasetFinal, "", paramH.ToString(), "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -314,8 +313,8 @@ namespace Sussol_Analyse_Subproject
                             featuresDesiredClusters.Add(feature);
 
                         }
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -341,8 +340,8 @@ namespace Sussol_Analyse_Subproject
                             featuresDesiredClusters.Add(feature);
 
                         }
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -364,8 +363,8 @@ namespace Sussol_Analyse_Subproject
                             featuresDesiredClusters.Add(feature);
 
                         }
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -382,8 +381,8 @@ namespace Sussol_Analyse_Subproject
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", paramJ.ToString(), "", "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -405,8 +404,8 @@ namespace Sussol_Analyse_Subproject
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", paramL.ToString(), "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
-                        counter++;
-                        worker.ReportProgress(counter);
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -428,9 +427,9 @@ namespace Sussol_Analyse_Subproject
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", "", paramH.ToString()).ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
-                        
-                        counter++;
-                        worker.ReportProgress(counter);
+
+                        amountOfModels++;
+                        worker.ReportProgress(amountOfModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -453,9 +452,9 @@ namespace Sussol_Analyse_Subproject
             {
                 writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
                 string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                writer.addGraph(canopyFullPath, counter, algorithmtype, view);
+                writer.addGraph(canopyFullPath, amountOfModels, algorithmtype, view);
             }
-            counter = 0;
+            amountOfModels = 0;
             features.Clear();
             results.Clear();
         }
@@ -468,9 +467,7 @@ namespace Sussol_Analyse_Subproject
             {
                  set = dataset.Split('\\').Last();
             }
-            string dataSetZonderslash = dataset.Replace(@"\\", @"\");
-            training.dataSet =  dataset;
-            string datasets = File.ReadAllText(training.dataSet);
+            string datasetFinal = File.ReadAllText(dataset);
             JObject jObject = new JObject();
             string algorithmtype = ((AlgorithmName)algorithm).ToString();
             string txtFileName = "";
@@ -486,16 +483,14 @@ namespace Sussol_Analyse_Subproject
             switch (algorithm) {
 
                 case AlgorithmName.CANOPY:
-                    
-                   
-                    for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1 += 5)
+                  for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1 += 5)
                     {
                         for (var paramT2 = MinMaxValues.canopyT2min; paramT2 < MinMaxValues.canopyT2max + 1; paramT2 += 5)
                         {
                             for (var paramMaxCandidates = MinMaxValues.canopyMaxCandidatesMin; paramMaxCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramMaxCandidates += 5)
                             {
                                 feature = "No. of clusters: " + desiredClusters + " No. of candidates: " + paramMaxCandidates + " T2 distance: " + paramT2 + "T1 distance: " + paramT1;
-                                var model = sus.canopyModeller(datasets, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString()).ToString();
+                                var model = sus.canopyModeller(datasetFinal, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString()).ToString();
                                 jObject = JObject.Parse(model);
                                 JArray items = (JArray)jObject["clusters"];
                                 length = items.Count;
@@ -525,16 +520,7 @@ namespace Sussol_Analyse_Subproject
                             
                     }
                                    
-                      if (format.Equals("csv")) {
-                        writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
-                            string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                            writer.addGraph(canopyFullPath, AmountOfModels, algorithmtype, view);
-                        }
-
-
-                    AmountOfModels = 0;
-                    features.Clear();
-                    results.Clear();
+                    
                     break;
                 case AlgorithmName.SOM:
 
@@ -553,7 +539,7 @@ namespace Sussol_Analyse_Subproject
 
                                     feature = "Learning rate: " + paramL + " Height: " + paramH + " Width: " + paramW;
                                     var paramLtoString = paramL.ToString();
-                                    var model = sus.somModeller(datasets, paramL.ToString().Replace(',', '.'), paramH.ToString(), paramW.ToString()).ToString();
+                                    var model = sus.somModeller(datasetFinal, paramL.ToString().Replace(',', '.'), paramH.ToString(), paramW.ToString()).ToString();
                                     jObject = JObject.Parse(model);
                                     JArray items = (JArray)jObject["clusters"];
                                     length = items.Count;
@@ -576,18 +562,7 @@ namespace Sussol_Analyse_Subproject
                       
                         }
                     }
-                    if (format.Equals("csv"))
-                    {
-                        writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype,featuresDesiredClusters,desiredClusters, view);
-                        string somFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                        writer.addGraph(somFullPath, AmountOfModels, algorithmtype, view);
-
-                    }
-
-
-                    AmountOfModels = 0;
-                    features.Clear();
-                    results.Clear();
+                 
                     break;
                 case AlgorithmName.XMEANS:
                       for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI += 5)
@@ -604,7 +579,7 @@ namespace Sussol_Analyse_Subproject
                                         feature = "Iteration value: " + paramI + " Max no. of iterations in improveme-parameter part: " + paramM + " Max no. of iterations in improveme-structure part: " + paramJ + "Minimum no. of clusters: " + paramL + "Maximum no. of clusters: " + paramH;
 
 
-                                        var model = sus.xmeansModeller(datasets, paramI.ToString(), paramM.ToString(), paramJ.ToString(), paramL.ToString(), paramH.ToString()).ToString();
+                                        var model = sus.xmeansModeller(datasetFinal, paramI.ToString(), paramM.ToString(), paramJ.ToString(), paramL.ToString(), paramH.ToString()).ToString();
                                         jObject = JObject.Parse(model);
                                         JArray items = (JArray)jObject["clusters"];
                                          length = items.Count;
@@ -631,19 +606,22 @@ namespace Sussol_Analyse_Subproject
 
                         }
                     }
-                    if (format.Equals("csv"))
-                    {
-                        writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
-                        string xmeansFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                        writer.addGraph(xmeansFullPath, AmountOfModels, algorithmtype, view);
-                    }
-                    AmountOfModels = 0;
-                    features.Clear();
-                    results.Clear();
+                 
                     break;
                     
             }
-            
+            if (format.Equals("csv"))
+            {
+                writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
+                string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
+                writer.addGraph(canopyFullPath, AmountOfModels, algorithmtype, view);
+            }
+
+
+            AmountOfModels = 0;
+            features.Clear();
+            results.Clear();
+
         }
 
     }
