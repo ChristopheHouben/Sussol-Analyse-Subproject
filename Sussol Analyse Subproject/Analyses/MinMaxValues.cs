@@ -31,9 +31,9 @@ namespace Sussol_Analyse_Subproject
         public const double somLmin = 0.001;
         public const double somLmax = 0.9;
         public const int somHmin = 2;
-        public const int somHmax = 20;
+        public const int somHmax = 4;
         public const int somWmin = 2;
-        public const int somWmax = 20;
+        public const int somWmax = 6;
 
     }
 }

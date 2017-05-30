@@ -92,9 +92,6 @@ namespace Sussol_Analyse_Subproject
                     };
                     //meta-data toevoegen aan feature
 
-                    solventTemp.CasNumber = solventTemp.CasNumber.Replace("\"", "");
-                    solventTemp.Name = solventTemp.Name.Replace("\"", "");
-                    solventTemp.EHS_Color_Code = solventTemp.EHS_Color_Code.Replace("\"", "");
 
                     foreach (var feature in solvent.features)
                     {
