@@ -6,43 +6,54 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Sussol_Analyse_Subproject"
         mc:Ignorable="d"
-        Title="AnalySussol" Height="424.511" Width="539.667"
+        Title="AnalySussol" Height="424.511" Width="539.667" MaxHeight="424.511" MaxWidth="539.667" MinHeight="424.511" MinWidth="539.667"
+        BorderBrush="SteelBlue" WindowStyle="ThreeDBorderWindow"
         >
     <Grid Margin="0,0,0,0">
-        <GroupBox x:Name="GroupBoxAlgorithms" Header="Select the desired algorithm(s)" HorizontalAlignment="Left" Height="113" Margin="10,124,0,0" VerticalAlignment="Top" Width="164" FontSize="10">
+        <Grid.Background>
+            <ImageBrush x:Name="GridBackground"  Stretch="UniformToFill"/>
+        </Grid.Background>
+        <GroupBox x:Name="GroupBoxAlgorithms" Header="Select the desired algorithm" Foreground="White" HorizontalAlignment="Left" Height="113" Margin="10,124,0,0" VerticalAlignment="Top" Width="164" FontSize="10">
             <Grid>
-                <CheckBox x:Name="CheckBoxCanopy" Content="Canopy" HorizontalAlignment="Left" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
-                <CheckBox x:Name="CheckBoxSom" Content="SOM" HorizontalAlignment="left" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
-                <CheckBox x:Name="CheckBoxXmeans" Content="Xmeans" HorizontalAlignment="left" Margin="6,55,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxCanopy" Content="Canopy" HorizontalAlignment="Left" Foreground="White" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxSom" Content="SOM" HorizontalAlignment="left" Foreground="White" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxXmeans" Content="Xmeans" HorizontalAlignment="left" Foreground="White" Margin="6,55,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
 
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="GroupBoxModelType" Header="Select the desired modelling type" HorizontalAlignment="Left" Height="113" Margin="179,124,0,0" VerticalAlignment="Top" Width="176" FontSize="10" RenderTransformOrigin="0.949,0.339">
+        <GroupBox x:Name="GroupBoxModelType" Header="Select the desired modelling type" Foreground="White" HorizontalAlignment="Left" Height="113" Margin="179,124,0,0" VerticalAlignment="Top" Width="176" FontSize="10" RenderTransformOrigin="0.949,0.339">
             <Grid>
-                <CheckBox x:Name="CheckBoxVaried" Content="Varied" HorizontalAlignment="Left" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
-                <CheckBox x:Name="CheckBoxNested" Content="Nested" HorizontalAlignment="left" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxVaried" Content="Varied" HorizontalAlignment="Left" Foreground="White" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxNested" Content="Nested" HorizontalAlignment="left" Foreground="White" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="GroupBoxFormat" Header="Select the desired format" HorizontalAlignment="Left" Height="113" Margin="360,124,0,0" VerticalAlignment="Top" Width="161" FontSize="10">
+        <GroupBox x:Name="GroupBoxFormat" Header="Select the desired format" HorizontalAlignment="Left" Foreground="White"  Height="113" Margin="360,124,0,0" VerticalAlignment="Top" Width="161" FontSize="10">
             <Grid>
-                <CheckBox x:Name="CheckBoxRawData" Content="Raw data" HorizontalAlignment="Left" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
-                <CheckBox x:Name="CheckBoxCsv" Content="Csv" HorizontalAlignment="left" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxRawData" Content="Raw data" HorizontalAlignment="Left" Foreground="White" Margin="6,15,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
+                <CheckBox x:Name="CheckBoxCsv" Content="Csv" HorizontalAlignment="left" Foreground="White" Margin="6,35,0,0" VerticalAlignment="Top" Click="setButtonVisibility" IsEnabled="False" />
             </Grid>
         </GroupBox>
         <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Width="327" Margin="86,22,80,47">
-            <Label Content="Select a dataset to begin:" FontSize="14"/>
+            <Label Content="Select a dataset to begin:" Foreground="White" FontSize="14"/>
             <Button x:Name="btnOpenFile" Click="btnOpenFile_Click" Content="Select dataset" Margin="20,2,0,0" Height="26" Width="117" />
 
         </WrapPanel>
 
 
-        <Button x:Name="ButtonStart" Content="Start" HorizontalAlignment="Left" Margin="179,257,0,0" VerticalAlignment="Top" Width="166" Height="44" Click="ButtonStart_Click" IsEnabled="False"/>
-        <Label x:Name="LabelChosenInfo" Content="You have chosen " Margin="10,81,396,0" VerticalAlignment="Top" RenderTransformOrigin="-0.412,0.269" FontSize="14"/>
-        <Label x:Name="LabelDataSetName" Content="no dataset yet." Margin="0,0,290,284" FontSize="14" RenderTransformOrigin="0.584,3.517" Height="29" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="106" />
-        <Label x:Name="LblDesired_clusters" Content="No. of desired clusters:" HorizontalAlignment="Left" Margin="286,81,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <TextBox x:Name="TxtBoxDesiredClusters" Height="29" Margin="452,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="setbuttonviisibility" IsEnabled="False" HorizontalAlignment="Left" Width="36" RenderTransformOrigin="1.472,0.348"/>
+        <Button x:Name="ButtonStart" Content="Start" HorizontalAlignment="Left" Margin="179,257,0,0"  VerticalAlignment="Top" Width="166" Height="44" Click="ButtonStart_Click" IsEnabled="False" Background="White">
+            <Button.OpacityMask>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.OpacityMask>
+        </Button>
+        <Label x:Name="LabelChosenInfo" Content="You have not chosen a dataset yet." Foreground="White" Margin="10,81,270,270"   FontSize="14"/>
+        <Label x:Name="LblDesired_clusters" Content="No. of desired clusters:" Foreground="White"  HorizontalAlignment="Left" Margin="272,81,0,0" VerticalAlignment="Top" FontSize="14" Width="175" HorizontalContentAlignment="Right"/>
+        <TextBox x:Name="TxtBoxDesiredClusters" Height="29" Margin="452,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="setbuttonviisibility" IsEnabled="False" HorizontalAlignment="Left" Width="36" RenderTransformOrigin="1.472,0.348" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
-        <ProgressBar x:Name="pbLoading" HorizontalAlignment="Left" Height="37" Margin="119,347,0,0" VerticalAlignment="Top" Width="286" Minimum="0" Maximum="100"/>
+        <ProgressBar x:Name="pbLoading" HorizontalAlignment="Left" Height="37" Margin="119,347,0,0"   VerticalAlignment="Top" Width="286" Minimum="0" Maximum="100"/>
         <Label x:Name="LblProgress" Content="Select your choices and press start to begin." HorizontalAlignment="Left" Margin="141,352,0,0" VerticalAlignment="Top" Width="240" HorizontalContentAlignment="Center"/>
+        <Label x:Name="lblPercentage" Content="" HorizontalAlignment="Left" Foreground="White" Margin="423,352,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

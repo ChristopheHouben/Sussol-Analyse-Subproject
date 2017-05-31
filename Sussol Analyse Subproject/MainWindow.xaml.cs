@@ -27,11 +27,15 @@ namespace Sussol_Analyse_Subproject
     public partial class MainWindow : Window, IThreadAwareView
     {
         private readonly SynchronizationContext _syncContext;
-
+       
         public MainWindow()
         {
+           
             InitializeComponent();
-            _syncContext = SynchronizationContext.Current; 
+            var uri = new Uri(@"../Content/backgrounder.png", UriKind.Relative);
+            GridBackground.ImageSource = new BitmapImage(uri);
+                _syncContext = SynchronizationContext.Current; 
+
         }
         
         modelService ms = new modelService();
@@ -41,7 +45,6 @@ namespace Sussol_Analyse_Subproject
         List<String> modellingtypes = new List<String>();
         bool textBoxContent = false;
         
-        
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
             {
@@ -49,12 +52,16 @@ namespace Sussol_Analyse_Subproject
                 ofd.InitialDirectory = @"C:\";
                 ofd.Title = "Select your dataset";
                  ofd.Filter = "CSV |*.csv";
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                 path = ofd.FileName;
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                path = ofd.FileName;
                 TxtBoxDesiredClusters.IsEnabled = true;
-                LabelDataSetName.Content = ofd.SafeFileName;
-                
-
+                LabelChosenInfo.Content = "You have chosen " + ofd.SafeFileName;
+                System.Diagnostics.Debug.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
+            }
+            else
+            {
+                LabelChosenInfo.Content = "Please choose a dataset";
             }
             
                 
@@ -109,12 +116,14 @@ namespace Sussol_Analyse_Subproject
                         }
                     }
                 }
-           
+
+            ButtonStart.IsEnabled = false;
+
 
         }
 
-     
-       
+
+
         private void setButtonVisibility(object sender, RoutedEventArgs e)
         {
             ButtonStart.IsEnabled = false;
@@ -144,8 +153,8 @@ namespace Sussol_Analyse_Subproject
             if (int.TryParse(TxtBoxDesiredClusters.Text, out value))
             {
                 //parsing successful 
-                LblDesired_clusters.Foreground = new SolidColorBrush(Colors.Black);
-                LblDesired_clusters.FontSize = 12;
+                LblDesired_clusters.Foreground = new SolidColorBrush(Colors.White);
+                LblDesired_clusters.FontSize = 14;
                 textBoxContent = true;
                 CheckBoxCanopy.IsEnabled = true;
                 CheckBoxSom.IsEnabled = true;
@@ -154,16 +163,17 @@ namespace Sussol_Analyse_Subproject
                 CheckBoxVaried.IsEnabled = true;
                 CheckBoxCsv.IsEnabled = true;
                 CheckBoxRawData.IsEnabled = true;
-                LblDesired_clusters.Content = "No.of desired clusters:";
+                LblDesired_clusters.Content = "No. of desired clusters:";
+                LblDesired_clusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
 
             }
             else
             {
                 //parsing failed. 
                 LblDesired_clusters.Foreground = new SolidColorBrush(Colors.Red);
-                LblDesired_clusters.FontSize = 11;
+                LblDesired_clusters.FontSize = 14;
                 LblDesired_clusters.Content = "Please use a numeric value:";
-
+                LblDesired_clusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
                 textBoxContent = false;
                 CheckBoxCanopy.IsEnabled = false;
                 CheckBoxSom.IsEnabled = false;
@@ -180,7 +190,18 @@ namespace Sussol_Analyse_Subproject
 
             Dispatcher.Invoke(() =>
             {
-                LblProgress.Content = "Modelling finished!";
+                LblProgress.Content = "Modelling finished! You can close the app.";
+                btnOpenFile.IsEnabled = false;
+                TxtBoxDesiredClusters.IsEnabled = false;
+                CheckBoxCanopy.IsEnabled = false;
+                CheckBoxSom.IsEnabled = false;
+                CheckBoxXmeans.IsEnabled = false;
+                CheckBoxNested.IsEnabled = false;
+                CheckBoxVaried.IsEnabled = false;
+                CheckBoxCsv.IsEnabled = false;
+                CheckBoxRawData.IsEnabled = false;
+                lblPercentage.Content = "100%";
+                pbLoading.Value = 100000;
             });
 
         }
@@ -192,7 +213,9 @@ namespace Sussol_Analyse_Subproject
             _syncContext.Send(_ => {
                 pbLoading.Maximum = modelsToMake;
                 pbLoading.Value = currentModelAmount;
-
+                double percentage = ((double)currentModelAmount / modelsToMake)*100;
+                double roundedPercentage = Math.Round(percentage, 1);
+                lblPercentage.Content = roundedPercentage+ "%";
                 //progressCounter++;
 
                 //System.Diagnostics.Debug.WriteLine($"progressCounter: {progressCounter}/{modelsToMake}");

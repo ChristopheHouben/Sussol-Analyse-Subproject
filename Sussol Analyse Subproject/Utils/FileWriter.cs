@@ -48,6 +48,7 @@ namespace Sussol_Analyse_Subproject
 
             //create excel
             Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            excel.DisplayAlerts = false;
 
             //add excel workbook
             Microsoft.Office.Interop.Excel.Workbook wb = excel.Workbooks.Add();
@@ -150,9 +151,14 @@ namespace Sussol_Analyse_Subproject
             wsDesiredClusters.Columns.AutoFit();
             //freeze top row
             // ws.Application.ActiveWindow.FreezePanes = true;
+            
 
+            excel.DisplayAlerts = false;
 
-            wb.SaveAs(fullPath, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+           // excelSheePrint.SaveAs(filename, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+
+            wb.SaveAs(fullPath, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue,
+                misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             wb.Close(true, misValue, misValue);
             excel.Quit();
 
@@ -236,8 +242,9 @@ namespace Sussol_Analyse_Subproject
             chartPage.ChartTitle.Font.Size = "20";
             chartPage.ChartArea.RoundedCorners = true;
             chartPage.Legend.Font.Name = "Garamond";
-          //  chartPage.SetBackgroundPicture("bg.jpg");
-            
+            //  chartPage.SetBackgroundPicture("bg.jpg");
+            excel.DisplayAlerts = false;
+
             wb.SaveAs(path, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             wb.Close(true, misValue, misValue);
             excel.Quit();
