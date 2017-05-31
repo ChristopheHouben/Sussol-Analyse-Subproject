@@ -52,7 +52,7 @@ namespace Sussol_Analyse_Subproject
         {
             this._view = view;
 
-            AlgorithmName type = (AlgorithmName)Enum.Parse(typeof(AlgorithmName), algorithmUsed.ToUpper(), true);
+            var type = (AlgorithmName)Enum.Parse(typeof(AlgorithmName), algorithmUsed.ToUpper(), true);
            
             switch (format)
             {

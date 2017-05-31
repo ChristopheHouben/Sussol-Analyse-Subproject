@@ -219,12 +219,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\" />
     <Folder Include="Content\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="bin\Content\backgrounder.png" />
-    <Resource Include="bin\Content\headericon.png" />
-    <Resource Include="bin\Content\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
