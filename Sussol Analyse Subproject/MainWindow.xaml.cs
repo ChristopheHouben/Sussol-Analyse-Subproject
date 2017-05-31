@@ -41,7 +41,7 @@ namespace Sussol_Analyse_Subproject
 
         }
         
-        modelService ms = new modelService();
+        ModelService ms = new ModelService();
         string path = "";
         List<String> algorithmsUsed = new List<String>();
         List<String> formats = new List<String>();

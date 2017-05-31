@@ -17,40 +17,40 @@ using java.awt;
 
 namespace Sussol_Analyse_Subproject
 {
-    public class modelService
+    public class ModelService
     {
-        IThreadAwareView view;
+        private IThreadAwareView _view;
 
-        List<String> features = new List<String>();
-        List<String> featuresDesiredClusters = new List<String>();
-        List<int> results = new List<int>();
-        List<int> resultsDesiredClusters = new List<int>();
-        BackgroundWorker worker = new BackgroundWorker();
+        private readonly List<string> _features = new List<string>();
+        private readonly List<string> _featuresDesiredClusters = new List<string>();
+        private readonly List<int> _results = new List<int>();
+        private readonly List<int> _resultsDesiredClusters = new List<int>();
+        readonly BackgroundWorker _worker = new BackgroundWorker();
         
 
 
-        TrainingSet training = new TrainingSet();
-        FileWriter writer = new FileWriter();
+        TrainingSet _training = new TrainingSet();
+        private readonly FileWriter _writer = new FileWriter();
 
-        static string dedicatedMapPath = @"C:\SussolAnalysis";
-        static string dedicatedMapCsvPath = @"C:\SussolAnalysis\CSV results";
-        static string dedicatedMapRawDataPath = @"C:\SussolAnalysis\Raw data results";
-        com.sussol.web.controller.ServiceModel sus = new com.sussol.web.controller.ServiceModel();
-        string set = "";
-        string feature = "";
-        string filename = "";
-        DirectoryInfo di = Directory.CreateDirectory(dedicatedMapPath);
-        DirectoryInfo diCsv = Directory.CreateDirectory(Path.Combine(dedicatedMapCsvPath));
-        DirectoryInfo diRaw = Directory.CreateDirectory(Path.Combine(dedicatedMapRawDataPath));
-        int totalModelsToMake;
-        int amountOfModels = 0;
-        int length = 0;
-        int canopyTotalVariedModels = MinMaxValues.canopyNmax + (MinMaxValues.canopyMaxCandidatesMax - 9) + (MinMaxValues.canopyT2max + 1) + (MinMaxValues.canopyT1max+7);
-        int somTotalVariedModels = (int)(MinMaxValues.somLmax / 0.09998888) + (MinMaxValues.somHmax - 1) + (MinMaxValues.somWmax - 1);
-        int xmeansTotalVariedModels = ((MinMaxValues.xMeansImax + 3) / 4) + ((MinMaxValues.xMeansMmax + 500) / 499) + ((MinMaxValues.xMeansJmax + 500) / 499) + (MinMaxValues.xMeansLmax / 2) + ((MinMaxValues.xMeansHmax + 2) / 5);
+        private static readonly string DedicatedMapPath = @"C:\SussolAnalysis";
+        private static readonly string DedicatedMapCsvPath = @"C:\SussolAnalysis\CSV results";
+        private static readonly string DedicatedMapRawDataPath = @"C:\SussolAnalysis\Raw data results";
+        private readonly com.sussol.web.controller.ServiceModel _sus = new com.sussol.web.controller.ServiceModel();
+        string _set = "";
+        string _feature = "";
+        string _filename = "";
+        DirectoryInfo _di = Directory.CreateDirectory(DedicatedMapPath);
+        DirectoryInfo _diCsv = Directory.CreateDirectory(Path.Combine(DedicatedMapCsvPath));
+        DirectoryInfo _diRaw = Directory.CreateDirectory(Path.Combine(DedicatedMapRawDataPath));
+        int _totalModelsToMake;
+        int _amountOfModels = 0;
+        int _length = 0;
+        readonly int _canopyTotalVariedModels = MinMaxValues.canopyNmax + (MinMaxValues.canopyMaxCandidatesMax - 9) + (MinMaxValues.canopyT2max + 1) + (MinMaxValues.canopyT1max+7);
+        readonly int _somTotalVariedModels = (int)(MinMaxValues.somLmax / 0.09998888) + (MinMaxValues.somHmax - 1) + (MinMaxValues.somWmax - 1);
+        readonly int _xmeansTotalVariedModels = ((MinMaxValues.xMeansImax + 3) / 4) + ((MinMaxValues.xMeansMmax + 500) / 499) + ((MinMaxValues.xMeansJmax + 500) / 499) + (MinMaxValues.xMeansLmax / 2) + ((MinMaxValues.xMeansHmax + 2) / 5);
         public void QueueGetResults(string dataset, string format, string algorithmUsed, string modellingtype, int desiredClusters, IThreadAwareView view)
         {
-            this.view = view;
+            this._view = view;
 
             AlgorithmName type = (AlgorithmName)Enum.Parse(typeof(AlgorithmName), algorithmUsed.ToUpper(), true);
            
@@ -64,17 +64,17 @@ namespace Sussol_Analyse_Subproject
                         case "nested":
 
 
-                            worker.DoWork += (sender, e) => GetNestedResults(type, dataset, format, desiredClusters);
+                            _worker.DoWork += (sender, e) => GetNestedResults(type, dataset, format, desiredClusters);
                      
-                            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-                            worker.RunWorkerAsync();
+                            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                            _worker.RunWorkerAsync();
                             break;
 
                         case "varied":
-                            worker.DoWork += (sender, e) => GetVariedresults(type, dataset, format, desiredClusters);
+                            _worker.DoWork += (sender, e) => GetVariedresults(type, dataset, format, desiredClusters);
                        
-                            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-                            worker.RunWorkerAsync();
+                            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                            _worker.RunWorkerAsync();
 
                             break;
 
@@ -86,18 +86,18 @@ namespace Sussol_Analyse_Subproject
                     {
 
                         case "nested":
-                            worker.DoWork += (sender, e) => GetNestedResults(type, dataset, "text", desiredClusters);
+                            _worker.DoWork += (sender, e) => GetNestedResults(type, dataset, "text", desiredClusters);
                           
-                            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-                            worker.RunWorkerAsync();
+                            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                            _worker.RunWorkerAsync();
 
                             break;
 
                         case "varied":
-                            worker.DoWork += (sender, e) => GetVariedresults(type, dataset, "text", desiredClusters);
+                            _worker.DoWork += (sender, e) => GetVariedresults(type, dataset, "text", desiredClusters);
                            
-                            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-                            worker.RunWorkerAsync();
+                            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                            _worker.RunWorkerAsync();
 
                             break;
 
@@ -112,7 +112,7 @@ namespace Sussol_Analyse_Subproject
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
-            view.TaskFinished();
+            _view.TaskFinished();
         }
         
         static string GetNameOf<T>(Expression<Func<T>> property)
@@ -123,19 +123,19 @@ namespace Sussol_Analyse_Subproject
         {
 
 
-                featuresDesiredClusters.Clear();
+                _featuresDesiredClusters.Clear();
                 if (dataset.Contains("\\"))
                 {
-                    set = dataset.Split('\\').Last();
+                    _set = dataset.Split('\\').Last();
                 }
                 string datasetFinal = File.ReadAllText(dataset);
                 JObject jObject = new JObject();
                 string algorithmtype = ((AlgorithmName)algorithm).ToString();
 
-                filename = algorithmtype + "results " + "varied parameters " + "dataset " + set;
+                _filename = algorithmtype + "results " + "varied parameters " + "dataset " + _set;
                 if (format.Equals("csv"))
                 {
-                    writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);
+                    _writer.createCsv(DedicatedMapCsvPath, algorithmtype, _filename, dataset);
                 }
 
 
@@ -144,105 +144,105 @@ namespace Sussol_Analyse_Subproject
                     case AlgorithmName.CANOPY:
                         for (var paramN = MinMaxValues.canopyNmin; paramN < MinMaxValues.canopyNmax + 1; paramN++)
                         {
-                            feature = "Number of Clusters = " + paramN.ToString();
+                            _feature = "Number of Clusters = " + paramN.ToString();
                             if (paramN != 0)
                             {
 
-                                var model = sus.canopyModeller(datasetFinal, paramN.ToString(), "", "", "").ToString();
+                                var model = _sus.canopyModeller(datasetFinal, paramN.ToString(), "", "", "").ToString();
                                 jObject = JObject.Parse(model);
                                 JArray items = (JArray)jObject["clusters"];
-                                length = items.Count;
-                                amountOfModels++;
-                                if (length == desiredClusters)
-                                { featuresDesiredClusters.Add(feature); }
-                                results.Add(length);
-                                view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
+                                _length = items.Count;
+                                _amountOfModels++;
+                                if (_length == desiredClusters)
+                                { _featuresDesiredClusters.Add(_feature); }
+                                _results.Add(_length);
+                                _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
                                 if (format.Equals("text"))
                                 {
-                                    feature = "Dataset_" + dataset + "_Varied parameters_numberOfClusters_value_is_" + paramN + ".txt";
-                                    writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                    _feature = "Dataset_" + dataset + "_Varied parameters_numberOfClusters_value_is_" + paramN + ".txt";
+                                    _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                                 }
-                                features.Add(feature);
+                                _features.Add(_feature);
 
                             }
                         }
                         for (var paramNumberOfCandidates = MinMaxValues.canopyMaxCandidatesMin; paramNumberOfCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramNumberOfCandidates++)
                         {
 
-                            feature = "Number of candidates= " + paramNumberOfCandidates.ToString();
-                            jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", "", "", paramNumberOfCandidates.ToString()).ToString());
+                            _feature = "Number of candidates= " + paramNumberOfCandidates.ToString();
+                            jObject = JObject.Parse(_sus.canopyModeller(datasetFinal, "", "", "", paramNumberOfCandidates.ToString()).ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            results.Add(length);
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
+                            _results.Add(_length);
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied_parameters__numberOfCandidates_value_is_" + paramNumberOfCandidates + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied_parameters__numberOfCandidates_value_is_" + paramNumberOfCandidates + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         for (var paramT2 = MinMaxValues.canopyT2min; paramT2 < MinMaxValues.canopyT2max + 1; paramT2++)
                         {
 
-                            feature = "T2= " + paramT2.ToString();
+                            _feature = "T2= " + paramT2.ToString();
                             if (paramT2 != 0)
                             {
-                                jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", "", paramT2.ToString(), "").ToString());
+                                jObject = JObject.Parse(_sus.canopyModeller(datasetFinal, "", "", paramT2.ToString(), "").ToString());
                                 JArray items = (JArray)jObject["clusters"];
-                                length = items.Count;
-                                if (length == desiredClusters)
+                                _length = items.Count;
+                                if (_length == desiredClusters)
                                 {
-                                    featuresDesiredClusters.Add(feature);
+                                    _featuresDesiredClusters.Add(_feature);
 
                                 }
-                                results.Add(length);
-                                amountOfModels++;
-                                view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
+                                _results.Add(_length);
+                                _amountOfModels++;
+                                _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
                                 if (format.Equals("text"))
                                 {
 
-                                    feature = "Dataset_" + dataset + "_Raw_data__T2_value_is_" + paramT2 + ".txt";
+                                    _feature = "Dataset_" + dataset + "_Raw_data__T2_value_is_" + paramT2 + ".txt";
 
-                                    writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                    _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                                 }
-                                features.Add(feature);
+                                _features.Add(_feature);
                             }
                         }
                         for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1++)
                         {
-                            feature = "T1= " + paramT1.ToString();
+                            _feature = "T1= " + paramT1.ToString();
 
                             if (paramT1 != 0)
                             {
-                                jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", paramT1.ToString(), "", "").ToString());
+                                jObject = JObject.Parse(_sus.canopyModeller(datasetFinal, "", paramT1.ToString(), "", "").ToString());
 
                                 JArray items = (JArray)jObject["clusters"];
-                                length = items.Count;
-                                if (length == desiredClusters)
+                                _length = items.Count;
+                                if (_length == desiredClusters)
                                 {
-                                    featuresDesiredClusters.Add(feature);
+                                    _featuresDesiredClusters.Add(_feature);
 
                                 }
-                                results.Add(length);
-                                amountOfModels++;
-                                view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
+                                _results.Add(_length);
+                                _amountOfModels++;
+                                _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
                                 if (format.Equals("text"))
                                 {
 
-                                    feature = "Dataset_" + dataset + "_Variedparameters__T2_value_is_" + paramT1 + ".txt";
+                                    _feature = "Dataset_" + dataset + "_Variedparameters__T2_value_is_" + paramT1 + ".txt";
 
-                                    writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                    _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                                 }
-                                features.Add(feature);
+                                _features.Add(_feature);
 
                             }
 
@@ -251,210 +251,210 @@ namespace Sussol_Analyse_Subproject
                     case AlgorithmName.SOM:
                         for (var paramL = MinMaxValues.somLmin; paramL < MinMaxValues.somLmax + 0.001; paramL += 0.09998888)
                         {
-                            feature = " learning rate step= " + paramL;
+                            _feature = " learning rate step= " + paramL;
                             var oString = paramL.ToString();
-                            jObject = JObject.Parse(sus.somModeller(datasetFinal, oString.Replace(',', '.'), "", "").ToString());
+                            jObject = JObject.Parse(_sus.somModeller(datasetFinal, oString.Replace(',', '.'), "", "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, somTotalVariedModels);
-                            results.Add(length);
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _somTotalVariedModels);
+                            _results.Add(_length);
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_learningRate_value_is_" + paramL + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_learningRate_value_is_" + paramL + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
 
                         }
                         for (var paramH = MinMaxValues.somHmin; paramH < MinMaxValues.somHmax + 1; paramH++)
                         {
-                            feature = "height= " + paramH;
+                            _feature = "height= " + paramH;
 
-                            jObject = JObject.Parse(sus.somModeller(datasetFinal, "", paramH.ToString(), "").ToString());
+                            jObject = JObject.Parse(_sus.somModeller(datasetFinal, "", paramH.ToString(), "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, somTotalVariedModels);
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _somTotalVariedModels);
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            results.Add(length);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramH + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramH + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
 
                         }
                         for (var paramW = MinMaxValues.somWmin; paramW < MinMaxValues.somWmax + 1; paramW++)
                         {
-                            feature = "width= " + paramW;
+                            _feature = "width= " + paramW;
 
-                            jObject = JObject.Parse(sus.somModeller(datasetFinal, "", "", paramW.ToString()).ToString());
+                            jObject = JObject.Parse(_sus.somModeller(datasetFinal, "", "", paramW.ToString()).ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, somTotalVariedModels);
-                            results.Add(length);
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _somTotalVariedModels);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramW + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramW + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
 
                         }
                         break;
                     case AlgorithmName.XMEANS:
                         for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI += 4)
                         {
-                            feature = "maximum overal iterations= " + paramI;
+                            _feature = "maximum overal iterations= " + paramI;
 
-                            jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, paramI.ToString(), "", "", "", "").ToString());
+                            jObject = JObject.Parse(_sus.xmeansModeller(datasetFinal, paramI.ToString(), "", "", "", "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
-                            results.Add(length);
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramI + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramI + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         for (var paramM = MinMaxValues.xMeansMmin; paramM < MinMaxValues.xMeansMmax + 1; paramM += 499)
                         {
-                            feature = "maximum iterations in the kMeans loop in the Improve-Parameter part= " + paramM;
-                            jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", paramM.ToString(), "", "", "").ToString());
+                            _feature = "maximum iterations in the kMeans loop in the Improve-Parameter part= " + paramM;
+                            jObject = JObject.Parse(_sus.xmeansModeller(datasetFinal, "", paramM.ToString(), "", "", "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
-                            results.Add(length);
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramM + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramM + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         for (var paramJ = MinMaxValues.xMeansJmin; paramJ < MinMaxValues.xMeansJmax + 1; paramJ += 499)
                         {
-                            feature = "maximum iterations in the kMeans loop in the Improve-Structure part= " + paramJ;
-                            jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", paramJ.ToString(), "", "").ToString());
+                            _feature = "maximum iterations in the kMeans loop in the Improve-Structure part= " + paramJ;
+                            jObject = JObject.Parse(_sus.xmeansModeller(datasetFinal, "", "", paramJ.ToString(), "", "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            results.Add(length);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramJ + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramJ + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         for (var paramL = MinMaxValues.xMeansLmin; paramL < MinMaxValues.xMeansLmax + 1; paramL += 2)
                         {
-                            feature = "minimum number of clusters= " + paramL;
-                            jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", paramL.ToString(), "").ToString());
+                            _feature = "minimum number of clusters= " + paramL;
+                            jObject = JObject.Parse(_sus.xmeansModeller(datasetFinal, "", "", "", paramL.ToString(), "").ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
-                            if (length == desiredClusters)
+                            _length = items.Count;
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            results.Add(length);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramL + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_Height_value_is_" + paramL + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         for (var paramH = MinMaxValues.xMeansHmin; paramH < MinMaxValues.xMeansHmax + 1; paramH += 5)
                         {
-                            feature = "maximum number of clusters";
-                            jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", "", paramH.ToString()).ToString());
+                            _feature = "maximum number of clusters";
+                            jObject = JObject.Parse(_sus.xmeansModeller(datasetFinal, "", "", "", "", paramH.ToString()).ToString());
                             JArray items = (JArray)jObject["clusters"];
-                            length = items.Count;
+                            _length = items.Count;
 
-                            amountOfModels++;
-                            view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
-                            if (length == desiredClusters)
+                            _amountOfModels++;
+                            _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                            if (_length == desiredClusters)
                             {
-                                featuresDesiredClusters.Add(feature);
+                                _featuresDesiredClusters.Add(_feature);
 
                             }
-                            results.Add(length);
+                            _results.Add(_length);
                             if (format.Equals("text"))
                             {
 
-                                feature = "Dataset_" + dataset + "_Varied parameters_minimumClusters_value_is_" + paramH + ".txt";
+                                _feature = "Dataset_" + dataset + "_Varied parameters_minimumClusters_value_is_" + paramH + ".txt";
 
-                                writer.Writetextfile(dedicatedMapRawDataPath, feature + ".txt", jObject, view);
+                                _writer.Writetextfile(DedicatedMapRawDataPath, _feature + ".txt", jObject, _view);
                             }
-                            features.Add(feature);
+                            _features.Add(_feature);
                         }
                         break;
 
                 }
                 if (format.Equals("csv"))
                 {
-                    writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
-                    string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                    writer.addGraph(canopyFullPath, amountOfModels, algorithmtype, view);
+                    _writer.WriteCsv(DedicatedMapCsvPath, _features, _filename, _results, algorithmtype, _featuresDesiredClusters, desiredClusters, _view);
+                    string canopyFullPath = Path.Combine(DedicatedMapCsvPath, _filename);
+                    _writer.addGraph(canopyFullPath, _amountOfModels, algorithmtype, _view);
                 }
-                amountOfModels = 0;
-                features.Clear();
-                results.Clear();
+                _amountOfModels = 0;
+                _features.Clear();
+                _results.Clear();
             }
 
         
@@ -463,15 +463,15 @@ namespace Sussol_Analyse_Subproject
             
             if (dataset.Contains("\\"))
             {
-                 set = dataset.Split('\\').Last();
+                 _set = dataset.Split('\\').Last();
             }
             string datasetFinal = File.ReadAllText(dataset);
             JObject jObject = new JObject();
             string algorithmtype = ((AlgorithmName)algorithm).ToString();
             string txtFileName = "";
-            string filename = algorithmtype + "results " + "nested parameters " + "dataset " + set ;
+            string filename = algorithmtype + "results " + "nested parameters " + "dataset " + _set ;
             if (format.Equals("text")) { filename += ".txt"; }
-            else{ writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);}
+            else{ _writer.createCsv(DedicatedMapCsvPath, algorithmtype, filename, dataset);}
 
             
          
@@ -485,30 +485,30 @@ namespace Sussol_Analyse_Subproject
                         {
                             for (var paramMaxCandidates = MinMaxValues.canopyMaxCandidatesMin; paramMaxCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramMaxCandidates += 5)
                             {
-                                totalModelsToMake = (((MinMaxValues.canopyT1max+5) / 5)+1) * ((MinMaxValues.canopyT2max / 5)+1) * ((MinMaxValues.canopyMaxCandidatesMax / 5)-1);
-                                feature = "No. of clusters: " + desiredClusters + " No. of candidates: " + paramMaxCandidates + " T2 distance: " + paramT2 + "T1 distance: " + paramT1;
-                                var model = sus.canopyModeller(datasetFinal, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString()).ToString();
+                                _totalModelsToMake = (((MinMaxValues.canopyT1max+5) / 5)+1) * ((MinMaxValues.canopyT2max / 5)+1) * ((MinMaxValues.canopyMaxCandidatesMax / 5)-1);
+                                _feature = "No. of clusters: " + desiredClusters + " No. of candidates: " + paramMaxCandidates + " T2 distance: " + paramT2 + "T1 distance: " + paramT1;
+                                var model = _sus.canopyModeller(datasetFinal, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString()).ToString();
                                 jObject = JObject.Parse(model);
                                 JArray items = (JArray)jObject["clusters"];
-                                length = items.Count;
+                                _length = items.Count;
                                 
-                                if (length == desiredClusters) {
-                                    featuresDesiredClusters.Add(feature);
+                                if (_length == desiredClusters) {
+                                    _featuresDesiredClusters.Add(_feature);
 
                                 }
-                                features.Add(feature);
-                                results.Add(length);
-                                amountOfModels++;
+                                _features.Add(_feature);
+                                _results.Add(_length);
+                                _amountOfModels++;
                                 if (format.Equals("text"))
                                 {
 
                                     txtFileName = "Dataset_" + dataset + "_Raw_data__T1_value_is_" + paramT1 + "_T2_value_is_" + paramT2 + "_maxCandidates_is_" + paramMaxCandidates + ".txt";
-                                    writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
+                                    _writer.Writetextfile(DedicatedMapRawDataPath, txtFileName + ".txt", jObject, _view);
                                 }
 
                                 //worker.ReportProgress(totalModelsToMake);
 
-                                view.ProgressUpdate(amountOfModels,totalModelsToMake);
+                                _view.ProgressUpdate(_amountOfModels,_totalModelsToMake);
                                 
                             }
                            
@@ -526,37 +526,37 @@ namespace Sussol_Analyse_Subproject
                         {
                             for (var paramW = MinMaxValues.somWmin; paramW < MinMaxValues.somWmax+1; paramW += 1)
                             {
-                                totalModelsToMake = (int)((MinMaxValues.somLmax+0.001) / 0.09998888)  * (MinMaxValues.somHmax-1)  * (MinMaxValues.somWmax-1);
+                                _totalModelsToMake = (int)((MinMaxValues.somLmax+0.001) / 0.09998888)  * (MinMaxValues.somHmax-1)  * (MinMaxValues.somWmax-1);
 
                                 if (paramW < paramH)
                                 {
-                                    amountOfModels++;
+                                    _amountOfModels++;
                                 }
                                 else
                                 {
 
-                                    feature = "Learning rate: " + paramL + " Height: " + paramH + " Width: " + paramW;
+                                    _feature = "Learning rate: " + paramL + " Height: " + paramH + " Width: " + paramW;
                                     var paramLtoString = paramL.ToString();
-                                    var model = sus.somModeller(datasetFinal, paramL.ToString().Replace(',', '.'), paramH.ToString(), paramW.ToString()).ToString();
+                                    var model = _sus.somModeller(datasetFinal, paramL.ToString().Replace(',', '.'), paramH.ToString(), paramW.ToString()).ToString();
                                     jObject = JObject.Parse(model);
                                     JArray items = (JArray)jObject["clusters"];
-                                    length = items.Count;
-                                    if (length == desiredClusters) {
-                                        featuresDesiredClusters.Add(feature);
+                                    _length = items.Count;
+                                    if (_length == desiredClusters) {
+                                        _featuresDesiredClusters.Add(_feature);
                                         
                                     }
-                                    amountOfModels++;
-                                    features.Add(feature);
-                                    results.Add(length);
+                                    _amountOfModels++;
+                                    _features.Add(_feature);
+                                    _results.Add(_length);
                                     if (format.Equals("text"))
                                     {
 
                                         txtFileName = "Dataset_" + dataset + "_Raw_data__LearningRate_value_is_" + paramL + "_Height_value_is_" + paramH + "_Width_is_" + paramW + ".txt";
-                                        writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
+                                        _writer.Writetextfile(DedicatedMapRawDataPath, txtFileName + ".txt", jObject, _view);
                                     }
                                    // view.ProgressUpdate(amountOfModels,totalModelsToMake);
                                 }
-                                view.ProgressUpdate(amountOfModels, totalModelsToMake);
+                                _view.ProgressUpdate(_amountOfModels, _totalModelsToMake);
                             }
                       
                         }
@@ -574,30 +574,30 @@ namespace Sussol_Analyse_Subproject
                                     for (var paramH = MinMaxValues.xMeansHmin; paramH < MinMaxValues.xMeansHmax + 1; paramH+=5)
                                     {
 
-                                         totalModelsToMake = ((MinMaxValues.xMeansImax+3) / 4) * ((MinMaxValues.xMeansMmax+500) / 499)  * ((MinMaxValues.xMeansJmax + 500) / 499) * (MinMaxValues.xMeansLmax / 2) * ((MinMaxValues.xMeansHmax + 2) / 5);
-                                        feature = "Iteration value: " + paramI + " Max no. of iterations in improveme-parameter part: " + paramM + " Max no. of iterations in improveme-structure part: " + paramJ + "Minimum no. of clusters: " + paramL + "Maximum no. of clusters: " + paramH;
+                                         _totalModelsToMake = ((MinMaxValues.xMeansImax+3) / 4) * ((MinMaxValues.xMeansMmax+500) / 499)  * ((MinMaxValues.xMeansJmax + 500) / 499) * (MinMaxValues.xMeansLmax / 2) * ((MinMaxValues.xMeansHmax + 2) / 5);
+                                        _feature = "Iteration value: " + paramI + " Max no. of iterations in improveme-parameter part: " + paramM + " Max no. of iterations in improveme-structure part: " + paramJ + "Minimum no. of clusters: " + paramL + "Maximum no. of clusters: " + paramH;
 
 
-                                        var model = sus.xmeansModeller(datasetFinal, paramI.ToString(), paramM.ToString(), paramJ.ToString(), paramL.ToString(), paramH.ToString()).ToString();
+                                        var model = _sus.xmeansModeller(datasetFinal, paramI.ToString(), paramM.ToString(), paramJ.ToString(), paramL.ToString(), paramH.ToString()).ToString();
                                         jObject = JObject.Parse(model);
                                         JArray items = (JArray)jObject["clusters"];
-                                         length = items.Count;
-                                        if (length == desiredClusters) {
+                                         _length = items.Count;
+                                        if (_length == desiredClusters) {
                                            
-                                            featuresDesiredClusters.Add(feature);
+                                            _featuresDesiredClusters.Add(_feature);
                                             
                                         }
-                                        amountOfModels++;
-                                        features.Add(feature);
-                                        results.Add(length);
+                                        _amountOfModels++;
+                                        _features.Add(_feature);
+                                        _results.Add(_length);
                                         if (format.Equals("text"))
                                         {
 
                                             txtFileName = "Dataset_" + dataset + "_Raw_data__numberOfIterations_is_" + paramI + "_NumberOfIterationsIntImproveParameterPart_is_" + paramM + "_NumberOfIterationsIntImproveStructurePart_is_" + paramJ + "_minimumNumberOfClusters_is_"+paramL+"_maximumNumberOfClusters_is_"+paramH+".txt";
-                                            writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
+                                            _writer.Writetextfile(DedicatedMapRawDataPath, txtFileName + ".txt", jObject, _view);
                                         }
 
-                                        view.ProgressUpdate(amountOfModels, totalModelsToMake);
+                                        _view.ProgressUpdate(_amountOfModels, _totalModelsToMake);
 
                                     }
                                 }
@@ -611,13 +611,13 @@ namespace Sussol_Analyse_Subproject
             }
             if (format.Equals("csv"))
             {
-                writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
-                string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                writer.addGraph(canopyFullPath, amountOfModels, algorithmtype, view);
+                _writer.WriteCsv(DedicatedMapCsvPath, _features, filename, _results, algorithmtype, _featuresDesiredClusters, desiredClusters, _view);
+                string canopyFullPath = Path.Combine(DedicatedMapCsvPath, filename);
+                _writer.addGraph(canopyFullPath, _amountOfModels, algorithmtype, _view);
             }
-            amountOfModels = 0;
-            features.Clear();
-            results.Clear();
+            _amountOfModels = 0;
+            _features.Clear();
+            _results.Clear();
 
         }
 
