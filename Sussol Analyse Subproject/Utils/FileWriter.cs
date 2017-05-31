@@ -135,15 +135,19 @@ namespace Sussol_Analyse_Subproject
                 ws.Cells[o + 3, 1] = usedParameter[o];
                 ws.Cells[o + 3, 2] = results[o];
             }
+            if (featuresDesiredClusters.Count() == 0)
+            {
+                wsDesiredClusters.Cells[ 3, 1] = "There are no parameters found for your desired no. of clusters.";
+            }
             for (var o = 0; o < featuresDesiredClusters.Count(); o++) {
 
                 wsDesiredClusters.Cells[o + 3, 1] = featuresDesiredClusters[o];
                 wsDesiredClusters.Cells[o + 3, 2] = numberOfClusters;
-
+               
             }
             //Adjust all columns
             ws.Columns.AutoFit();
-
+            wsDesiredClusters.Columns.AutoFit();
             //freeze top row
             // ws.Application.ActiveWindow.FreezePanes = true;
 

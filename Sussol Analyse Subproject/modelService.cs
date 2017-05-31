@@ -42,9 +42,11 @@ namespace Sussol_Analyse_Subproject
         DirectoryInfo diCsv = Directory.CreateDirectory(Path.Combine(dedicatedMapCsvPath));
         DirectoryInfo diRaw = Directory.CreateDirectory(Path.Combine(dedicatedMapRawDataPath));
         int totalModelsToMake;
-        int currentModelAmount;
-
-
+        int amountOfModels = 0;
+        int length = 0;
+        int canopyTotalVariedModels = MinMaxValues.canopyNmax + (MinMaxValues.canopyMaxCandidatesMax - 9) + (MinMaxValues.canopyT2max + 1) + (MinMaxValues.canopyT1max+7);
+        int somTotalVariedModels = (int)(MinMaxValues.somLmax / 0.09998888) + (MinMaxValues.somHmax - 1) + (MinMaxValues.somWmax - 1);
+        int xmeansTotalVariedModels = ((MinMaxValues.xMeansImax + 3) / 4) + ((MinMaxValues.xMeansMmax + 500) / 499) + ((MinMaxValues.xMeansJmax + 500) / 499) + (MinMaxValues.xMeansLmax / 2) + ((MinMaxValues.xMeansHmax + 2) / 5);
         public void QueueGetResults(string dataset, string format, string algorithmUsed, string modellingtype, int desiredClusters, IThreadAwareView view)
         {
             this.view = view;
@@ -62,16 +64,14 @@ namespace Sussol_Analyse_Subproject
 
 
                             worker.DoWork += (sender, e) => GetNestedResults(type, dataset, format, desiredClusters);
-                            worker.ProgressChanged += worker_ProgressChanged;
-                            worker.WorkerReportsProgress = true;
+                     
                             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
                             worker.RunWorkerAsync();
                             break;
 
                         case "varied":
                             worker.DoWork += (sender, e) => GetVariedresults(type, dataset, format, desiredClusters);
-                            worker.ProgressChanged += worker_ProgressChanged;
-                            worker.WorkerReportsProgress = true;
+                       
                             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
                             worker.RunWorkerAsync();
 
@@ -86,8 +86,7 @@ namespace Sussol_Analyse_Subproject
 
                         case "nested":
                             worker.DoWork += (sender, e) => GetNestedResults(type, dataset, "text", desiredClusters);
-                            worker.ProgressChanged += worker_ProgressChanged;
-                            worker.WorkerReportsProgress = true;
+                          
                             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
                             worker.RunWorkerAsync();
 
@@ -95,8 +94,7 @@ namespace Sussol_Analyse_Subproject
 
                         case "varied":
                             worker.DoWork += (sender, e) => GetVariedresults(type, dataset, "text", desiredClusters);
-                            worker.ProgressChanged += worker_ProgressChanged;
-                            worker.WorkerReportsProgress = true;
+                           
                             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
                             worker.RunWorkerAsync();
 
@@ -108,10 +106,7 @@ namespace Sussol_Analyse_Subproject
             }
         }
 
-        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            view.ProgressUpdate(currentModelAmount,totalModelsToMake);
-        }
+       
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -140,9 +135,7 @@ namespace Sussol_Analyse_Subproject
                     writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);
                 }
 
-
-                int amountOfModels = 0;
-                int length = 0;
+                
                 switch (algorithm)
                 {
                 case AlgorithmName.CANOPY:
@@ -151,6 +144,7 @@ namespace Sussol_Analyse_Subproject
                             feature ="Number of Clusters = "+ paramN.ToString();
                             if (paramN != 0)
                             {
+                          
                                 var model = sus.canopyModeller(datasetFinal, paramN.ToString(), "", "", "").ToString();
                                 jObject = JObject.Parse(model);
                                 JArray items = (JArray)jObject["clusters"];
@@ -159,7 +153,7 @@ namespace Sussol_Analyse_Subproject
                             if (length == desiredClusters)
                                 {featuresDesiredClusters.Add(feature);}
                             results.Add(length);
-                            worker.ReportProgress(amountOfModels);
+                            view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
                             if (format.Equals("text"))
                                 {
                                     feature = "Dataset_" + dataset + "_Varied parameters_numberOfClusters_value_is_" + paramN + ".txt";
@@ -171,7 +165,8 @@ namespace Sussol_Analyse_Subproject
                         }
                     for (var paramNumberOfCandidates = MinMaxValues.canopyMaxCandidatesMin; paramNumberOfCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramNumberOfCandidates++)
                         {
-                            feature = "Number of candidates= "+paramNumberOfCandidates.ToString();
+                       
+                        feature = "Number of candidates= "+paramNumberOfCandidates.ToString();
                             jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", "", "", paramNumberOfCandidates.ToString()).ToString());
                             JArray items = (JArray)jObject["clusters"];
                             length = items.Count;
@@ -182,7 +177,7 @@ namespace Sussol_Analyse_Subproject
                         }
                         results.Add(length);
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
                         if (format.Equals("text"))
                             {
 
@@ -194,6 +189,7 @@ namespace Sussol_Analyse_Subproject
                         }
                     for (var paramT2 = MinMaxValues.canopyT2min; paramT2 < MinMaxValues.canopyT2max + 1; paramT2++)
                         {
+                       
                             feature = "T2= "+paramT2.ToString();
                             if (paramT2 != 0)
                             {
@@ -207,7 +203,7 @@ namespace Sussol_Analyse_Subproject
                             }
                             results.Add(length);
                             amountOfModels++;
-                            worker.ReportProgress(amountOfModels);
+                            view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
                             if (format.Equals("text"))
                                 {
 
@@ -221,7 +217,7 @@ namespace Sussol_Analyse_Subproject
                     for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1++)
                         {
                             feature = "T1= "+ paramT1.ToString();
-
+                            
                             if (paramT1 != 0)
                             {
                                 jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", paramT1.ToString(), "", "").ToString());
@@ -235,7 +231,7 @@ namespace Sussol_Analyse_Subproject
                             }
                             results.Add(length);
                             amountOfModels++;
-                            worker.ReportProgress(amountOfModels);
+                            view.ProgressUpdate(amountOfModels, canopyTotalVariedModels);
                             if (format.Equals("text"))
                                 {
 
@@ -250,7 +246,7 @@ namespace Sussol_Analyse_Subproject
                         }
                     break;
                 case AlgorithmName.SOM:
-                    for (var paramL = MinMaxValues.somLmin; paramL < MinMaxValues.somLmax + 0.001; paramL += 0.0899)
+                    for (var paramL = MinMaxValues.somLmin; paramL < MinMaxValues.somLmax + 0.001; paramL += 0.09998888)
                     {
                         feature = " learning rate step= "+ paramL;
                         var oString = paramL.ToString();
@@ -258,7 +254,7 @@ namespace Sussol_Analyse_Subproject
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, somTotalVariedModels);
                         results.Add(length);
                         if (length == desiredClusters)
                         {
@@ -283,7 +279,7 @@ namespace Sussol_Analyse_Subproject
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, somTotalVariedModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -313,7 +309,7 @@ namespace Sussol_Analyse_Subproject
 
                         }
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, somTotalVariedModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -327,7 +323,7 @@ namespace Sussol_Analyse_Subproject
                     }
                     break;
                 case AlgorithmName.XMEANS:
-                    for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI++)
+                    for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI+=4)
                     {
                         feature = "maximum overal iterations= "+paramI;
 
@@ -340,7 +336,7 @@ namespace Sussol_Analyse_Subproject
 
                         }
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -351,7 +347,7 @@ namespace Sussol_Analyse_Subproject
                         }
                         features.Add(feature);
                     }
-                    for (var paramM = MinMaxValues.xMeansMmin; paramM < MinMaxValues.xMeansMmax + 1; paramM += 5)
+                    for (var paramM = MinMaxValues.xMeansMmin; paramM < MinMaxValues.xMeansMmax + 1; paramM += 499)
                     {
                         feature = "maximum iterations in the kMeans loop in the Improve-Parameter part= "+paramM;
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", paramM.ToString(), "", "", "").ToString());
@@ -363,7 +359,7 @@ namespace Sussol_Analyse_Subproject
 
                         }
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
                         results.Add(length);
                         if (format.Equals("text"))
                         {
@@ -374,14 +370,14 @@ namespace Sussol_Analyse_Subproject
                         }
                         features.Add(feature);
                     }
-                    for (var paramJ = MinMaxValues.xMeansJmin; paramJ < MinMaxValues.xMeansJmax + 1; paramJ += 5)
+                    for (var paramJ = MinMaxValues.xMeansJmin; paramJ < MinMaxValues.xMeansJmax + 1; paramJ += 499)
                     {
                         feature = "maximum iterations in the kMeans loop in the Improve-Structure part= " +paramJ;
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", paramJ.ToString(), "", "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -397,14 +393,14 @@ namespace Sussol_Analyse_Subproject
                         }
                         features.Add(feature);
                     }
-                    for (var paramL = MinMaxValues.xMeansLmin; paramL < MinMaxValues.xMeansLmax + 1; paramL++)
+                    for (var paramL = MinMaxValues.xMeansLmin; paramL < MinMaxValues.xMeansLmax + 1; paramL+=2)
                     {
                         feature = "minimum number of clusters= "+paramL;
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", paramL.ToString(), "").ToString());
                         JArray items = (JArray)jObject["clusters"];
                         length = items.Count;
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -420,7 +416,7 @@ namespace Sussol_Analyse_Subproject
                         }
                         features.Add(feature);
                     }
-                    for (var paramH = MinMaxValues.xMeansHmin; paramH < MinMaxValues.xMeansHmax + 1; paramH++)
+                    for (var paramH = MinMaxValues.xMeansHmin; paramH < MinMaxValues.xMeansHmax + 1; paramH+=5)
                     {
                         feature = "maximum number of clusters";
                         jObject = JObject.Parse(sus.xmeansModeller(datasetFinal, "", "", "", "", paramH.ToString()).ToString());
@@ -428,7 +424,7 @@ namespace Sussol_Analyse_Subproject
                         length = items.Count;
 
                         amountOfModels++;
-                        worker.ReportProgress(amountOfModels);
+                        view.ProgressUpdate(amountOfModels, xmeansTotalVariedModels);
                         if (length == desiredClusters)
                         {
                             featuresDesiredClusters.Add(feature);
@@ -475,8 +471,8 @@ namespace Sussol_Analyse_Subproject
             else{ writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);}
 
             
-            int amountOfModels = 0;
-            int length = 0;
+         
+         
             switch (algorithm) {
 
                 case AlgorithmName.CANOPY:
