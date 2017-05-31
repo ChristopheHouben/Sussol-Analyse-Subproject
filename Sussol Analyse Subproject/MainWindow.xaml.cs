@@ -33,7 +33,7 @@ namespace Sussol_Analyse_Subproject
            
             InitializeComponent();
             var uriBackground = new Uri(@"../../Content/backgrounder.png", UriKind.Relative);
-            var uriIcon = new Uri(@"../../Content/headericon.png", UriKind.Relative);
+            var uriIcon = new Uri(@"../../Content/headericon.jpg", UriKind.Relative);
             GridBackground.ImageSource = new BitmapImage(uriBackground);
             this.Icon = new BitmapImage(uriIcon);
             
@@ -51,10 +51,12 @@ namespace Sussol_Analyse_Subproject
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.InitialDirectory = @"C:\";
-                ofd.Title = "Select your dataset";
-                 ofd.Filter = "CSV |*.csv";
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                InitialDirectory = @"C:\",
+                Title = "Select your dataset",
+                Filter = "CSV |*.csv"
+            };
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 path = ofd.FileName;

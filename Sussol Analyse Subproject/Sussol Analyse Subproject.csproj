@@ -220,7 +220,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
-    <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\backgrounder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\headericon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
