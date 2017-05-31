@@ -10,7 +10,7 @@ namespace Sussol_Analyse_Subproject
     {
         void TaskFinished();
 
-        void ProgressUpdate();
+        void ProgressUpdate(int currentModelAmount, int modelsToMake);
 
         void WritingToCsv();
 

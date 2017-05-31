@@ -26,10 +26,12 @@ namespace Sussol_Analyse_Subproject
     /// </summary>
     public partial class MainWindow : Window, IThreadAwareView
     {
+        private readonly SynchronizationContext _syncContext;
+
         public MainWindow()
         {
             InitializeComponent();
-            
+            _syncContext = SynchronizationContext.Current; 
         }
         
         modelService ms = new modelService();
@@ -183,12 +185,25 @@ namespace Sussol_Analyse_Subproject
 
         }
 
-        public void ProgressUpdate()
+        public void ProgressUpdate(int currentModelAmount, int modelsToMake)
         {
-            Dispatcher.Invoke(() =>
-            {
-                pbLoading.Value++;
-            });
+            //var progressCounter = 0;
+
+            _syncContext.Send(_ => {
+                pbLoading.Maximum = modelsToMake;
+                pbLoading.Value = currentModelAmount;
+
+                //progressCounter++;
+
+                //System.Diagnostics.Debug.WriteLine($"progressCounter: {progressCounter}/{modelsToMake}");
+
+            }, null);
+
+            //Dispatcher.Invoke(() =>
+            //{
+            //    pbLoading.Maximum = modelsToMake;
+            //    pbLoading.Value++;
+            //});
         }
 
         public void WritingToCsv()
@@ -206,6 +221,7 @@ namespace Sussol_Analyse_Subproject
                 LblProgress.Content = "Creating your chart ...";
             });
         }
+
     }
 
 }

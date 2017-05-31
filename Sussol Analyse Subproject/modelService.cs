@@ -35,15 +35,16 @@ namespace Sussol_Analyse_Subproject
         static string dedicatedMapCsvPath = @"C:\SussolAnalysis\CSV results";
         static string dedicatedMapRawDataPath = @"C:\SussolAnalysis\Raw data results";
         com.sussol.web.controller.ServiceModel sus = new com.sussol.web.controller.ServiceModel();
-
+        string set = "";
         string feature = "";
         string filename = "";
         DirectoryInfo di = Directory.CreateDirectory(dedicatedMapPath);
         DirectoryInfo diCsv = Directory.CreateDirectory(Path.Combine(dedicatedMapCsvPath));
         DirectoryInfo diRaw = Directory.CreateDirectory(Path.Combine(dedicatedMapRawDataPath));
-        
+        int totalModelsToMake;
+        int currentModelAmount;
 
-        
+
         public void QueueGetResults(string dataset, string format, string algorithmUsed, string modellingtype, int desiredClusters, IThreadAwareView view)
         {
             this.view = view;
@@ -109,7 +110,7 @@ namespace Sussol_Analyse_Subproject
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            view.ProgressUpdate();
+            view.ProgressUpdate(currentModelAmount,totalModelsToMake);
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -124,14 +125,12 @@ namespace Sussol_Analyse_Subproject
         }
         public void GetVariedresults(AlgorithmName algorithm, string dataset, string format,int desiredClusters)
         {
-
-            string set = "";
+            
             featuresDesiredClusters.Clear();
             if (dataset.Contains("\\"))
             {
                 set = dataset.Split('\\').Last();
             }
-               // training.dataSet = dataset;
                 string datasetFinal = File.ReadAllText(dataset);
                 JObject jObject = new JObject();
                 string algorithmtype = ((AlgorithmName)algorithm).ToString();
@@ -146,8 +145,8 @@ namespace Sussol_Analyse_Subproject
                 int length = 0;
                 switch (algorithm)
                 {
-                    case AlgorithmName.CANOPY:
-                        for (var paramN = MinMaxValues.canopyNmin; paramN < MinMaxValues.canopyNmax + 1; paramN++)
+                case AlgorithmName.CANOPY:
+                    for (var paramN = MinMaxValues.canopyNmin; paramN < MinMaxValues.canopyNmax + 1; paramN++)
                         {
                             feature ="Number of Clusters = "+ paramN.ToString();
                             if (paramN != 0)
@@ -170,7 +169,7 @@ namespace Sussol_Analyse_Subproject
 
                             }
                         }
-                        for (var paramNumberOfCandidates = MinMaxValues.canopyMaxCandidatesMin; paramNumberOfCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramNumberOfCandidates++)
+                    for (var paramNumberOfCandidates = MinMaxValues.canopyMaxCandidatesMin; paramNumberOfCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramNumberOfCandidates++)
                         {
                             feature = "Number of candidates= "+paramNumberOfCandidates.ToString();
                             jObject = JObject.Parse(sus.canopyModeller(datasetFinal, "", "", "", paramNumberOfCandidates.ToString()).ToString());
@@ -193,7 +192,7 @@ namespace Sussol_Analyse_Subproject
                             }
                             features.Add(feature);
                         }
-                        for (var paramT2 = MinMaxValues.canopyT2min; paramT2 < MinMaxValues.canopyT2max + 1; paramT2++)
+                    for (var paramT2 = MinMaxValues.canopyT2min; paramT2 < MinMaxValues.canopyT2max + 1; paramT2++)
                         {
                             feature = "T2= "+paramT2.ToString();
                             if (paramT2 != 0)
@@ -219,7 +218,7 @@ namespace Sussol_Analyse_Subproject
                                 features.Add(feature);
                             }
                         }
-                        for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1++)
+                    for (var paramT1 = MinMaxValues.canopyT1min; paramT1 < MinMaxValues.canopyT1max + 1; paramT1++)
                         {
                             feature = "T1= "+ paramT1.ToString();
 
@@ -462,7 +461,7 @@ namespace Sussol_Analyse_Subproject
         
             public void GetNestedResults(AlgorithmName algorithm, string dataset,string format, int desiredClusters) {
            
-            string set = "";
+            
             if (dataset.Contains("\\"))
             {
                  set = dataset.Split('\\').Last();
@@ -473,12 +472,10 @@ namespace Sussol_Analyse_Subproject
             string txtFileName = "";
             string filename = algorithmtype + "results " + "nested parameters " + "dataset " + set ;
             if (format.Equals("text")) { filename += ".txt"; }
-            else{
-                writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);
-            }
+            else{ writer.createCsv(dedicatedMapCsvPath, algorithmtype, filename, dataset);}
 
             
-            int AmountOfModels = 0;
+            int amountOfModels = 0;
             int length = 0;
             switch (algorithm) {
 
@@ -489,6 +486,7 @@ namespace Sussol_Analyse_Subproject
                         {
                             for (var paramMaxCandidates = MinMaxValues.canopyMaxCandidatesMin; paramMaxCandidates < MinMaxValues.canopyMaxCandidatesMax + 1; paramMaxCandidates += 5)
                             {
+                                totalModelsToMake = (((MinMaxValues.canopyT1max+5) / 5)+1) * ((MinMaxValues.canopyT2max / 5)+1) * ((MinMaxValues.canopyMaxCandidatesMax / 5)-1);
                                 feature = "No. of clusters: " + desiredClusters + " No. of candidates: " + paramMaxCandidates + " T2 distance: " + paramT2 + "T1 distance: " + paramT1;
                                 var model = sus.canopyModeller(datasetFinal, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString()).ToString();
                                 jObject = JObject.Parse(model);
@@ -501,15 +499,17 @@ namespace Sussol_Analyse_Subproject
                                 }
                                 features.Add(feature);
                                 results.Add(length);
-                                AmountOfModels++;
+                                amountOfModels++;
                                 if (format.Equals("text"))
                                 {
 
                                     txtFileName = "Dataset_" + dataset + "_Raw_data__T1_value_is_" + paramT1 + "_T2_value_is_" + paramT2 + "_maxCandidates_is_" + paramMaxCandidates + ".txt";
                                     writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
                                 }
-                   
-                                worker.ReportProgress(AmountOfModels);
+
+                                //worker.ReportProgress(totalModelsToMake);
+
+                                view.ProgressUpdate(amountOfModels,totalModelsToMake);
                                 
                             }
                            
@@ -519,20 +519,19 @@ namespace Sussol_Analyse_Subproject
 
                             
                     }
-                                   
-                    
-                    break;
+                   break;
                 case AlgorithmName.SOM:
-
-                    for (var paramL = MinMaxValues.somLmin; paramL < MinMaxValues.somLmax + 0.001; paramL += 0.1899)
+                  for (var paramL = MinMaxValues.somLmin; paramL < MinMaxValues.somLmax + 0.001; paramL += 0.09998888)
                     {
-                        for (var paramH = MinMaxValues.somHmin; paramH < MinMaxValues.somHmax; paramH += 1)
+                        for (var paramH = MinMaxValues.somHmin; paramH < MinMaxValues.somHmax+1; paramH += 1)
                         {
-                            for (var paramW = MinMaxValues.somWmin; paramW < MinMaxValues.somWmax; paramW += 1)
+                            for (var paramW = MinMaxValues.somWmin; paramW < MinMaxValues.somWmax+1; paramW += 1)
                             {
+                                totalModelsToMake = (int)(MinMaxValues.somLmax / 0.09998888)  * (MinMaxValues.somHmax-1)  * (MinMaxValues.somWmax-1);
+
                                 if (paramW < paramH)
                                 {
-                                    AmountOfModels++;
+                                    amountOfModels++;
                                 }
                                 else
                                 {
@@ -547,7 +546,7 @@ namespace Sussol_Analyse_Subproject
                                         featuresDesiredClusters.Add(feature);
                                         
                                     }
-                                    AmountOfModels++;
+                                    amountOfModels++;
                                     features.Add(feature);
                                     results.Add(length);
                                     if (format.Equals("text"))
@@ -556,26 +555,27 @@ namespace Sussol_Analyse_Subproject
                                         txtFileName = "Dataset_" + dataset + "_Raw_data__LearningRate_value_is_" + paramL + "_Height_value_is_" + paramH + "_Width_is_" + paramW + ".txt";
                                         writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
                                     }
-                                    worker.ReportProgress(AmountOfModels);
+                                   // view.ProgressUpdate(amountOfModels,totalModelsToMake);
                                 }
+                                view.ProgressUpdate(amountOfModels, totalModelsToMake);
                             }
                       
                         }
                     }
-                 
-                    break;
+                   break;
                 case AlgorithmName.XMEANS:
-                      for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI += 5)
+                  for (var paramI = MinMaxValues.xMeansImin; paramI < MinMaxValues.xMeansImax + 1; paramI += 4)
                     {
-                        for (var paramM = MinMaxValues.xMeansMmin; paramM < MinMaxValues.xMeansMmax + 1; paramM +=1200)
+                        for (var paramM = MinMaxValues.xMeansMmin; paramM < MinMaxValues.xMeansMmax + 1; paramM +=499)
                         {
-                            for (var paramJ = MinMaxValues.xMeansJmin; paramJ < MinMaxValues.xMeansJmax + 1; paramJ += 1200)
+                            for (var paramJ = MinMaxValues.xMeansJmin; paramJ < MinMaxValues.xMeansJmax + 1; paramJ += 499)
                             {
-                                for (var paramL = MinMaxValues.xMeansLmin; paramL < MinMaxValues.xMeansLmax + 1; paramL+=3)
+                                for (var paramL = MinMaxValues.xMeansLmin; paramL < MinMaxValues.xMeansLmax + 1; paramL+=2)
                                 {
                                     for (var paramH = MinMaxValues.xMeansHmin; paramH < MinMaxValues.xMeansHmax + 1; paramH+=5)
                                     {
-                                    
+
+                                         totalModelsToMake = ((MinMaxValues.xMeansImax+3) / 4) * ((MinMaxValues.xMeansMmax+500) / 499)  * ((MinMaxValues.xMeansJmax + 500) / 499) * (MinMaxValues.xMeansLmax / 2) * ((MinMaxValues.xMeansHmax + 2) / 5);
                                         feature = "Iteration value: " + paramI + " Max no. of iterations in improveme-parameter part: " + paramM + " Max no. of iterations in improveme-structure part: " + paramJ + "Minimum no. of clusters: " + paramL + "Maximum no. of clusters: " + paramH;
 
 
@@ -588,7 +588,7 @@ namespace Sussol_Analyse_Subproject
                                             featuresDesiredClusters.Add(feature);
                                             
                                         }
-                                        AmountOfModels++;
+                                        amountOfModels++;
                                         features.Add(feature);
                                         results.Add(length);
                                         if (format.Equals("text"))
@@ -598,27 +598,25 @@ namespace Sussol_Analyse_Subproject
                                             writer.Writetextfile(dedicatedMapRawDataPath, txtFileName + ".txt", jObject, view);
                                         }
 
-                                        worker.ReportProgress(AmountOfModels);
+                                        view.ProgressUpdate(amountOfModels, totalModelsToMake);
 
                                     }
                                 }
                             }
 
                         }
+                        System.Diagnostics.Debug.WriteLine(amountOfModels);
                     }
-                 
-                    break;
+                   break;
                     
             }
             if (format.Equals("csv"))
             {
                 writer.WriteCsv(dedicatedMapCsvPath, features, filename, results, algorithmtype, featuresDesiredClusters, desiredClusters, view);
                 string canopyFullPath = Path.Combine(dedicatedMapCsvPath, filename);
-                writer.addGraph(canopyFullPath, AmountOfModels, algorithmtype, view);
+                writer.addGraph(canopyFullPath, amountOfModels, algorithmtype, view);
             }
-
-
-            AmountOfModels = 0;
+            amountOfModels = 0;
             features.Clear();
             results.Clear();
 
