@@ -32,9 +32,11 @@ namespace Sussol_Analyse_Subproject
         {
            
             InitializeComponent();
-            var uri = new Uri(@"../Content/backgrounder.png", UriKind.Relative);
-            GridBackground.ImageSource = new BitmapImage(uri);
-                _syncContext = SynchronizationContext.Current; 
+            var uriBackground = new Uri(@"../Content/backgrounder.png", UriKind.Relative);
+            var uriIcon = new Uri(@"../Content/headericon.png", UriKind.Relative);
+            GridBackground.ImageSource = new BitmapImage(uriBackground);
+            this.Icon = new BitmapImage(uriIcon);
+            _syncContext = SynchronizationContext.Current; 
 
         }
         
