@@ -161,6 +161,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Analyses\ClusterDistanceCenter.cs" />
     <Compile Include="ITreadAwareView.cs" />
     <Compile Include="Utils\JsonHelper.cs" />
     <Page Include="MainWindow.xaml">
@@ -170,7 +171,6 @@
     <Compile Include="Analyses\Algorithm.cs" />
     <Compile Include="Analyses\AlgorithmName.cs" />
     <Compile Include="Analyses\Cluster.cs" />
-    <Compile Include="Analyses\ClusterDistanceCenter.cs" />
     <Compile Include="Analyses\Feature.cs" />
     <Compile Include="Analyses\MinMaxValues.cs" />
     <Compile Include="Analyses\Model.cs" />
@@ -220,6 +220,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bin\Content\backgrounder.png" />
+    <Resource Include="bin\Content\headericon.png" />
+    <Resource Include="bin\Content\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -604,7 +604,7 @@ namespace Sussol_Analyse_Subproject
                             }
 
                         }
-                        System.Diagnostics.Debug.WriteLine(amountOfModels);
+                       
                     }
                    break;
                     

@@ -36,6 +36,7 @@ namespace Sussol_Analyse_Subproject
             var uriIcon = new Uri(@"../Content/headericon.png", UriKind.Relative);
             GridBackground.ImageSource = new BitmapImage(uriBackground);
             this.Icon = new BitmapImage(uriIcon);
+            
             _syncContext = SynchronizationContext.Current; 
 
         }
@@ -59,7 +60,7 @@ namespace Sussol_Analyse_Subproject
                 path = ofd.FileName;
                 TxtBoxDesiredClusters.IsEnabled = true;
                 LabelChosenInfo.Content = "You have chosen " + ofd.SafeFileName;
-                System.Diagnostics.Debug.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
+              
             }
             else
             {
@@ -210,25 +211,16 @@ namespace Sussol_Analyse_Subproject
 
         public void ProgressUpdate(int currentModelAmount, int modelsToMake)
         {
-            //var progressCounter = 0;
-
             _syncContext.Send(_ => {
                 pbLoading.Maximum = modelsToMake;
                 pbLoading.Value = currentModelAmount;
                 double percentage = ((double)currentModelAmount / modelsToMake)*100;
                 double roundedPercentage = Math.Round(percentage, 1);
                 lblPercentage.Content = roundedPercentage+ "%";
-                //progressCounter++;
-
-                //System.Diagnostics.Debug.WriteLine($"progressCounter: {progressCounter}/{modelsToMake}");
+              
 
             }, null);
 
-            //Dispatcher.Invoke(() =>
-            //{
-            //    pbLoading.Maximum = modelsToMake;
-            //    pbLoading.Value++;
-            //});
         }
 
         public void WritingToCsv()
