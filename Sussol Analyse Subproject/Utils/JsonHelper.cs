@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
+using Sussol_Analyse_Subproject.Analyses;
 
-
-namespace Sussol_Analyse_Subproject
+namespace Sussol_Analyse_Subproject.Utils
 {
     public class JsonHelper
     {
@@ -46,7 +45,7 @@ namespace Sussol_Analyse_Subproject
                         //0.4.9 Changed to new Feature
                         feature = new Feature()
                         {
-                            featureName = naam
+                            FeatureName = naam
                         }
 
                     };
@@ -95,17 +94,16 @@ namespace Sussol_Analyse_Subproject
 
                     foreach (var feature in solvent.features)
                     {
-                        string featureName;
                         //0.4.9 - Changed TryParse of FeatureName to .ToString() as featureName was changed from type FeatureName to a string
-                        featureName = feature.name.ToString();
+                        string featureName = feature.name.ToString();
                         //0.4.9 - Changed from minMaxValues to features In order to solve new architecture problems (Dynamic Database)
                         //0.5.0.3 
                         string naam = feature.name.ToString().Replace("(", "").Replace(")", "").Replace("/", "").Replace("=", "").Replace("ø", "");
 
                         Feature featureTemp = new Feature()
                         {
-                            featureName = naam,
-                            value = feature.value,
+                            FeatureName = naam,
+                            Value = feature.value,
                             //0.5.0.1 Added PrimaryData
 
                         };

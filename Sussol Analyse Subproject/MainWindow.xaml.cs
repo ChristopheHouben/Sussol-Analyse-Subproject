@@ -1,23 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
 
 using System.Windows.Forms;
 using System.Threading;
-using WpfAnimatedGif;
-using System.ComponentModel;
 
 namespace Sussol_Analyse_Subproject
 {
@@ -43,15 +32,15 @@ namespace Sussol_Analyse_Subproject
         
         ModelService ms = new ModelService();
         string path = "";
-        List<String> algorithmsUsed = new List<String>();
-        List<String> formats = new List<String>();
-        List<String> modellingtypes = new List<String>();
-        bool textBoxContent = false;
+        readonly List<string> _algorithmsUsed = new List<string>();
+        readonly List<string> _formats = new List<string>();
+        readonly List<string> _modellingtypes = new List<string>();
+        public bool TextBoxContent = false;
         
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
             {
-            OpenFileDialog ofd = new OpenFileDialog()
+            var ofd = new OpenFileDialog()
             {
                 InitialDirectory = @"C:\",
                 Title = "Select your dataset",
@@ -75,46 +64,46 @@ namespace Sussol_Analyse_Subproject
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
             LblProgress.Content = "Creating your results! One moment please";
-            int value = int.Parse(TxtBoxDesiredClusters.Text);
+            var value = int.Parse(TxtBoxDesiredClusters.Text);
             //algorithm checkboxes
-            if (CheckBoxCanopy.IsChecked.Value)
+            if (CheckBoxCanopy.IsChecked != null && CheckBoxCanopy.IsChecked.Value)
                 {
-                    algorithmsUsed.Add("canopy");
+                    _algorithmsUsed.Add("canopy");
                 }
-                if (CheckBoxSom.IsChecked.Value)
+                if (CheckBoxSom.IsChecked != null && CheckBoxSom.IsChecked.Value)
                 {
-                    algorithmsUsed.Add("som");
+                    _algorithmsUsed.Add("som");
                 }
-                if (CheckBoxXmeans.IsChecked.Value)
+                if (CheckBoxXmeans.IsChecked != null && CheckBoxXmeans.IsChecked.Value)
                 {
 
-                    algorithmsUsed.Add("xmeans");
+                    _algorithmsUsed.Add("xmeans");
                 }
                 //format checkboxes
-                if (CheckBoxCsv.IsChecked.Value)
+                if (CheckBoxCsv.IsChecked != null && CheckBoxCsv.IsChecked.Value)
                 {
-                    formats.Add("csv");
+                    _formats.Add("csv");
                 }
-                if (CheckBoxRawData.IsChecked.Value)
+                if (CheckBoxRawData.IsChecked != null && CheckBoxRawData.IsChecked.Value)
                 {
-                    formats.Add("raw");
+                    _formats.Add("raw");
                 }
                 //modellingtype checkboxes
-                if (CheckBoxVaried.IsChecked.Value)
+                if (CheckBoxVaried.IsChecked != null && CheckBoxVaried.IsChecked.Value)
                 {
-                    modellingtypes.Add("varied");
+                    _modellingtypes.Add("varied");
                 }
-                if (CheckBoxNested.IsChecked.Value)
+                if (CheckBoxNested.IsChecked != null && CheckBoxNested.IsChecked.Value)
                 {
-                    modellingtypes.Add("nested");
+                    _modellingtypes.Add("nested");
                 }
 
 
-            foreach (string format in formats)
+            foreach (var format in _formats)
                 {
-                    foreach (string algo in algorithmsUsed)
+                    foreach (var algo in _algorithmsUsed)
                     {
-                        foreach (string modellingtype in modellingtypes)
+                        foreach (var modellingtype in _modellingtypes)
                         {
                         IThreadAwareView view = this;
                             ms.QueueGetResults(path, format, algo, modellingtype, value, view);
@@ -129,7 +118,7 @@ namespace Sussol_Analyse_Subproject
 
 
 
-        private void setButtonVisibility(object sender, RoutedEventArgs e)
+        private void SetButtonVisibility(object sender, RoutedEventArgs e)
         {
             ButtonStart.IsEnabled = false;
             
@@ -139,7 +128,7 @@ namespace Sussol_Analyse_Subproject
                     {
                         if (CheckBoxVaried.IsChecked.Value || CheckBoxNested.IsChecked.Value)
                         {
-                        if (textBoxContent == true){
+                        if (TextBoxContent == true){
                             ButtonStart.IsEnabled = true;
                         }
                         
@@ -151,16 +140,16 @@ namespace Sussol_Analyse_Subproject
           
         }
 
-        private void setbuttonviisibility(object sender, TextChangedEventArgs e)
+        private void Setbuttonviisibility(object sender, TextChangedEventArgs e)
         {
             int value;
 
             if (int.TryParse(TxtBoxDesiredClusters.Text, out value))
             {
                 //parsing successful 
-                LblDesired_clusters.Foreground = new SolidColorBrush(Colors.White);
-                LblDesired_clusters.FontSize = 14;
-                textBoxContent = true;
+                LblDesiredClusters.Foreground = new SolidColorBrush(Colors.White);
+                LblDesiredClusters.FontSize = 14;
+                TextBoxContent = true;
                 CheckBoxCanopy.IsEnabled = true;
                 CheckBoxSom.IsEnabled = true;
                 CheckBoxXmeans.IsEnabled = true;
@@ -168,18 +157,18 @@ namespace Sussol_Analyse_Subproject
                 CheckBoxVaried.IsEnabled = true;
                 CheckBoxCsv.IsEnabled = true;
                 CheckBoxRawData.IsEnabled = true;
-                LblDesired_clusters.Content = "No. of desired clusters:";
-                LblDesired_clusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
+                LblDesiredClusters.Content = "No. of desired clusters:";
+                LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
 
             }
             else
             {
                 //parsing failed. 
-                LblDesired_clusters.Foreground = new SolidColorBrush(Colors.Red);
-                LblDesired_clusters.FontSize = 14;
-                LblDesired_clusters.Content = "Please use a numeric value:";
-                LblDesired_clusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
-                textBoxContent = false;
+                LblDesiredClusters.Foreground = new SolidColorBrush(Colors.Red);
+                LblDesiredClusters.FontSize = 14;
+                LblDesiredClusters.Content = "Please use a numeric value:";
+                LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
+                TextBoxContent = false;
                 CheckBoxCanopy.IsEnabled = false;
                 CheckBoxSom.IsEnabled = false;
                 CheckBoxXmeans.IsEnabled = false;
@@ -196,7 +185,7 @@ namespace Sussol_Analyse_Subproject
             Dispatcher.Invoke(() =>
             {
                 LblProgress.Content = "Modelling finished! You can close the app.";
-                btnOpenFile.IsEnabled = false;
+                BtnOpenFile.IsEnabled = false;
                 TxtBoxDesiredClusters.IsEnabled = false;
                 CheckBoxCanopy.IsEnabled = false;
                 CheckBoxSom.IsEnabled = false;
@@ -205,8 +194,8 @@ namespace Sussol_Analyse_Subproject
                 CheckBoxVaried.IsEnabled = false;
                 CheckBoxCsv.IsEnabled = false;
                 CheckBoxRawData.IsEnabled = false;
-                lblPercentage.Content = "100%";
-                pbLoading.Value = 100000;
+                LblPercentage.Content = "100%";
+                PbLoading.Value = 100000;
             });
 
         }
@@ -214,11 +203,11 @@ namespace Sussol_Analyse_Subproject
         public void ProgressUpdate(int currentModelAmount, int modelsToMake)
         {
             _syncContext.Send(_ => {
-                pbLoading.Maximum = modelsToMake;
-                pbLoading.Value = currentModelAmount;
+                PbLoading.Maximum = modelsToMake;
+                PbLoading.Value = currentModelAmount;
                 double percentage = ((double)currentModelAmount / modelsToMake)*100;
                 double roundedPercentage = Math.Round(percentage, 1);
-                lblPercentage.Content = roundedPercentage+ "%";
+                LblPercentage.Content = roundedPercentage+ "%";
               
 
             }, null);

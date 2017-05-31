@@ -1,39 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sussol_Analyse_Subproject
+﻿namespace Sussol_Analyse_Subproject.Analyses
 {
     public struct MinMaxValues
     {
-        public const int canopyNmin = -1;
-        public const int canopyNmax = 25;
-        public const int canopyMaxCandidatesMin = 10;
-        public const int canopyMaxCandidatesMax = 50;
-        public const int canopyT2min = -1;
-        public const int canopyT2max = 25;
-        public const int canopyT1min = -5;
-        public const int canopyT1max = 25;
+        public const int CanopyNmin = -1;
+        public const int CanopyNmax = 25;
+        public const int CanopyMaxCandidatesMin = 10;
+        public const int CanopyMaxCandidatesMax = 50;
+        public const int CanopyT2Min = -1;
+        public const int CanopyT2Max = 25;
+        public const int CanopyT1Min = -5;
+        public const int CanopyT1Max = 25;
 
-        public const int xMeansImin = 1;
-        public const int xMeansImax = 25;
-        public const int xMeansMmin = 1;
-        public const int xMeansMmax = 2500;
-        public const int xMeansJmin = 1;
-        public const int xMeansJmax = 2500;
-        public const int xMeansLmin = 2;
-        public const int xMeansLmax = 10;
-        public const int xMeansHmin = 2;
-        public const int xMeansHmax = 23;
+        public const int XMeansImin = 1;
+        public const int XMeansImax = 25;
+        public const int XMeansMmin = 1;
+        public const int XMeansMmax = 2500;
+        public const int XMeansJmin = 1;
+        public const int XMeansJmax = 2500;
+        public const int XMeansLmin = 2;
+        public const int XMeansLmax = 10;
+        public const int XMeansHmin = 2;
+        public const int XMeansHmax = 23;
 
-        public const double somLmin = 0.001;
-        public const double somLmax = 0.9;
-        public const int somHmin = 2;
-        public const int somHmax = 4;
-        public const int somWmin = 2;
-        public const int somWmax = 6;
+        public const double SomLmin = 0.001;
+        public const double SomLmax = 0.9;
+        public const int SomHmin = 2;
+        public const int SomHmax = 4;
+        public const int SomWmin = 2;
+        public const int SomWmax = 6;
 
     }
 }

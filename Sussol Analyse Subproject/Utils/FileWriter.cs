@@ -1,25 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Newtonsoft.Json.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
-namespace Sussol_Analyse_Subproject
+namespace Sussol_Analyse_Subproject.Utils
 {
     public class FileWriter 
     {
         // List<String> parameterNames = new List<String>();
-        IThreadAwareView view;
+        IThreadAwareView _view;
        
         
-        public void Writetextfile(String directory, String filename, JObject jObject, IThreadAwareView view)
+        public void Writetextfile(string directory, string filename, JObject jObject, IThreadAwareView view)
         {
-            this.view = view;
+            this._view = view;
             string onlyName = filename;
             if (filename.Contains("\\"))
             {
@@ -38,7 +35,7 @@ namespace Sussol_Analyse_Subproject
             }
         }
 
-        public void createCsv(String directory, string algorithm, string filename, string setname)
+        public void CreateCsv(string directory, string algorithm, string filename, string setname)
         {
             
             string fullPath = Path.Combine(directory, filename);
@@ -47,17 +44,15 @@ namespace Sussol_Analyse_Subproject
             object misValue = System.Reflection.Missing.Value;
 
             //create excel
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
             excel.DisplayAlerts = false;
 
             //add excel workbook
-            Microsoft.Office.Interop.Excel.Workbook wb = excel.Workbooks.Add();
+            Excel.Workbook wb = excel.Workbooks.Add();
 
-            Excel.Worksheet wsAllClusters;
-            wsAllClusters = (Excel.Worksheet)wb.Worksheets.Add();
+            var wsAllClusters = (Excel.Worksheet)wb.Worksheets.Add();
             wsAllClusters.Name = "All models";
-            Excel.Worksheet wsDesiredClusters;
-            wsDesiredClusters = (Excel.Worksheet)wb.Worksheets.Add();
+            var wsDesiredClusters = (Excel.Worksheet)wb.Worksheets.Add();
             wsDesiredClusters.Name = "Desired clusters";
             //add worksheets to workbook
 
@@ -82,12 +77,12 @@ namespace Sussol_Analyse_Subproject
             wb.Close(true, misValue, misValue);
             excel.Quit();
 
-            releaseObject(wsAllClusters);
-            releaseObject(wsDesiredClusters);
-            releaseObject(wb);
-            releaseObject(excel);
+            ReleaseObject(wsAllClusters);
+            ReleaseObject(wsDesiredClusters);
+            ReleaseObject(wb);
+            ReleaseObject(excel);
         }
-        private void releaseObject(object obj)
+        private void ReleaseObject(object obj)
         {
             try
             {
@@ -104,9 +99,9 @@ namespace Sussol_Analyse_Subproject
                 GC.Collect();
             }
         }
-        public void WriteCsv(String directory, List<String> usedParameter, String excelfilename, List<int> results, string algorithm, List<String> featuresDesiredClusters, int numberOfClusters, IThreadAwareView view)
+        public void WriteCsv(string directory, List<string> usedParameter, string excelfilename, List<int> results, string algorithm, List<string> featuresDesiredClusters, int numberOfClusters, IThreadAwareView view)
         {
-            this.view = view;
+            this._view = view;
             view.WritingToCsv();
             string fullPath = Path.Combine(directory, excelfilename);
 
@@ -116,18 +111,16 @@ namespace Sussol_Analyse_Subproject
             object misValue = System.Reflection.Missing.Value;
 
             //create excel
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            Excel.Application excel = new Excel.Application();
 
             //add excel workbook
-            Microsoft.Office.Interop.Excel.Workbook wb = excel.Workbooks.Add();
+            Excel.Workbook wb = excel.Workbooks.Add();
 
             wb = excel.Workbooks.Open(fullPath, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
 
 
-            Excel.Worksheet ws;
-            ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
-            Excel.Worksheet wsDesiredClusters;
-            wsDesiredClusters = (Excel.Worksheet)wb.Worksheets.get_Item("Desired clusters");
+            var ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
+            var wsDesiredClusters = (Excel.Worksheet)wb.Worksheets.get_Item("Desired clusters");
 
             //add worksheets to workbook
             var totalResults = results.Count();
@@ -136,7 +129,7 @@ namespace Sussol_Analyse_Subproject
                 ws.Cells[o + 3, 1] = usedParameter[o];
                 ws.Cells[o + 3, 2] = results[o];
             }
-            if (featuresDesiredClusters.Count() == 0)
+            if (!featuresDesiredClusters.Any())
             {
                 wsDesiredClusters.Cells[ 3, 1] = "There are no parameters found for your desired no. of clusters.";
             }
@@ -162,36 +155,31 @@ namespace Sussol_Analyse_Subproject
             wb.Close(true, misValue, misValue);
             excel.Quit();
 
-            releaseObject(ws);
+            ReleaseObject(ws);
 
-            releaseObject(wb);
-            releaseObject(excel);
+            ReleaseObject(wb);
+            ReleaseObject(excel);
 
 
         }
 
 
-        public void addGraph(string path, int counter, string algorithm, IThreadAwareView view)
+        public void AddGraph(string path, int counter, string algorithm, IThreadAwareView view)
         {
-            this.view = view;
+            this._view = view;
             view.AddingGraph();
             object missing = Type.Missing;
 
             object misValue = System.Reflection.Missing.Value;
 
             //create excel
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
 
             //add excel workbook
             Microsoft.Office.Interop.Excel.Workbook wb;
-            if (File.Exists(path))
-            {
-                wb = excel.Workbooks.Open(path, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-            }
-            else { wb = excel.Workbooks.Add(); }
+            wb = File.Exists(path) ? excel.Workbooks.Open(path, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0) : excel.Workbooks.Add();
 
-            Excel.Worksheet ws;
-            ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
+            var ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
             //add worksheets to workbook
             Excel.Worksheet ws2;
 
@@ -249,10 +237,10 @@ namespace Sussol_Analyse_Subproject
             wb.Close(true, misValue, misValue);
             excel.Quit();
 
-            releaseObject(ws);
-            releaseObject(ws2);
-            releaseObject(wb);
-            releaseObject(excel);
+            ReleaseObject(ws);
+            ReleaseObject(ws2);
+            ReleaseObject(wb);
+            ReleaseObject(excel);
 
 
         }
