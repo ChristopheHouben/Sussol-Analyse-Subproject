@@ -1,4 +1,4 @@
-﻿namespace Sussol_Analyse_Subproject
+﻿namespace Sussol_Analyse_Subproject.Utils
 {
     public interface IThreadAwareView
     {

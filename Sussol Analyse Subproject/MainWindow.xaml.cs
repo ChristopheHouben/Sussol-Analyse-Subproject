@@ -7,6 +7,9 @@ using System.Windows.Media.Imaging;
 
 using System.Windows.Forms;
 using System.Threading;
+using Sussol_Analyse_Subproject.Utils;
+using Cursors = System.Windows.Input.Cursors;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace Sussol_Analyse_Subproject
 {
@@ -21,11 +24,11 @@ namespace Sussol_Analyse_Subproject
         {
            
             InitializeComponent();
-            var uriBackground = new Uri(@"../../Content/backgrounder.png", UriKind.Relative);
-            var uriIcon = new Uri(@"../../Content/headericon.jpg", UriKind.Relative);
+            var uriBackground = new Uri(@"../../Images/background.png", UriKind.Relative);
+            var uriIcon = new Uri(@"../../Images/headericon.jpg", UriKind.Relative);
             GridBackground.ImageSource = new BitmapImage(uriBackground);
             this.Icon = new BitmapImage(uriIcon);
-            
+           
             _syncContext = SynchronizationContext.Current; 
 
         }
@@ -112,9 +115,16 @@ namespace Sussol_Analyse_Subproject
                 }
 
             ButtonStart.IsEnabled = false;
-
-
-        }
+            BtnOpenFile.IsEnabled = false;
+            TxtBoxDesiredClusters.IsEnabled = false;
+            CheckBoxCanopy.IsEnabled = false;
+            CheckBoxSom.IsEnabled = false;
+            CheckBoxXmeans.IsEnabled = false;
+            CheckBoxNested.IsEnabled = false;
+            CheckBoxVaried.IsEnabled = false;
+            CheckBoxCsv.IsEnabled = false;
+            CheckBoxRawData.IsEnabled = false;
+            }
 
 
 
@@ -148,7 +158,7 @@ namespace Sussol_Analyse_Subproject
             {
                 //parsing successful 
                 LblDesiredClusters.Foreground = new SolidColorBrush(Colors.White);
-                LblDesiredClusters.FontSize = 14;
+                LblDesiredClusters.FontSize = 16;
                 TextBoxContent = true;
                 CheckBoxCanopy.IsEnabled = true;
                 CheckBoxSom.IsEnabled = true;
@@ -165,9 +175,9 @@ namespace Sussol_Analyse_Subproject
             {
                 //parsing failed. 
                 LblDesiredClusters.Foreground = new SolidColorBrush(Colors.Red);
-                LblDesiredClusters.FontSize = 14;
+                LblDesiredClusters.FontSize = 16;
                 LblDesiredClusters.Content = "Please use a numeric value:";
-                LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
+                LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
                 TextBoxContent = false;
                 CheckBoxCanopy.IsEnabled = false;
                 CheckBoxSom.IsEnabled = false;
@@ -185,15 +195,6 @@ namespace Sussol_Analyse_Subproject
             Dispatcher.Invoke(() =>
             {
                 LblProgress.Content = "Modelling finished! You can close the app.";
-                BtnOpenFile.IsEnabled = false;
-                TxtBoxDesiredClusters.IsEnabled = false;
-                CheckBoxCanopy.IsEnabled = false;
-                CheckBoxSom.IsEnabled = false;
-                CheckBoxXmeans.IsEnabled = false;
-                CheckBoxNested.IsEnabled = false;
-                CheckBoxVaried.IsEnabled = false;
-                CheckBoxCsv.IsEnabled = false;
-                CheckBoxRawData.IsEnabled = false;
                 LblPercentage.Content = "100%";
                 PbLoading.Value = 100000;
             });
@@ -204,11 +205,19 @@ namespace Sussol_Analyse_Subproject
         {
             _syncContext.Send(_ => {
                 PbLoading.Maximum = modelsToMake;
-                PbLoading.Value = currentModelAmount;
+                if (currentModelAmount > modelsToMake)
+                {
+                    PbLoading.Value = modelsToMake;
+                }
+                else
+                {
+                    PbLoading.Value = currentModelAmount;
+                }
+               
                 double percentage = ((double)currentModelAmount / modelsToMake)*100;
                 double roundedPercentage = Math.Round(percentage, 1);
                 LblPercentage.Content = roundedPercentage+ "%";
-              
+               
 
             }, null);
 
@@ -230,6 +239,17 @@ namespace Sussol_Analyse_Subproject
             });
         }
 
+        private void Btn_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+
+        private void Btn_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Arrow;
+        }
+
+       
     }
 
 }

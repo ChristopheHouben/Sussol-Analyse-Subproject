@@ -162,7 +162,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Analyses\ClusterDistanceCenter.cs" />
-    <Compile Include="ITreadAwareView.cs" />
+    <Compile Include="Utils\IThreadAwareView.cs" />
     <Compile Include="Utils\JsonHelper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -215,20 +215,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <Resource Include="Images\backgrounder.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\" />
+    <Resource Include="Images\headericon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Content\backgrounder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Content\headericon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Content\icon.png" />
+    <Resource Include="Images\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
