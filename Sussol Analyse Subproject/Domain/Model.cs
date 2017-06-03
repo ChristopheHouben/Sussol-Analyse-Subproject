@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sussol_Analyse_Subproject.Analyses
+namespace Sussol_Analyse_Subproject.Domain
 {
     public class Model
     {

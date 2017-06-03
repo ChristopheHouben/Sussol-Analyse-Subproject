@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Linq.Expressions;
 using System.ComponentModel;
-using Sussol_Analyse_Subproject.Analyses;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using Newtonsoft.Json.Linq;
+using Sussol_Analyse_Subproject.Domain;
 using Sussol_Analyse_Subproject.Utils;
 
-namespace Sussol_Analyse_Subproject
+namespace Sussol_Analyse_Subproject.Analyses
 {
     public class ModelService
     {
@@ -114,10 +114,6 @@ namespace Sussol_Analyse_Subproject
             _view.TaskFinished();
         }
         
-        static string GetNameOf<T>(Expression<Func<T>> property)
-        {
-            return (property.Body as MemberExpression).Member.Name;
-        }
         public void GetVariedresults(string modellingtype,AlgorithmName algorithm, string dataset, string format, int desiredClusters)
         {
                 _featuresDesiredClusters.Clear();
@@ -139,7 +135,9 @@ namespace Sussol_Analyse_Subproject
                 switch (algorithm)
                 {
                     case AlgorithmName.CANOPY:
-                        for (var paramN = MinMaxValues.CanopyNmin; paramN < MinMaxValues.CanopyNmax + 1; paramN++)
+                      
+
+                    for (var paramN = MinMaxValues.CanopyNmin; paramN < MinMaxValues.CanopyNmax + 1; paramN++)
                         {
                             _feature = "Number of Clusters = " + paramN;
                             if (paramN != 0)
@@ -177,9 +175,10 @@ namespace Sussol_Analyse_Subproject
                         }
 
                         }
-                        break;
+                      
+                    break;
                     case AlgorithmName.SOM:
-                        for (var paramL = MinMaxValues.SomLmin; paramL < MinMaxValues.SomLmax + 0.001; paramL += 0.09998888)
+                    for (var paramL = MinMaxValues.SomLmin; paramL < MinMaxValues.SomLmax + 0.001; paramL += 0.09998888)
                         {
                             _feature = " learning rate step= " + paramL;
                             var oString = paramL.ToString();
@@ -204,9 +203,12 @@ namespace Sussol_Analyse_Subproject
 
 
                     }
-                        break;
+                       
+                    break;
                     case AlgorithmName.XMEANS:
-                        for (var paramI = MinMaxValues.XMeansImin; paramI < MinMaxValues.XMeansImax + 1; paramI += 4)
+                     
+
+                    for (var paramI = MinMaxValues.XMeansImin; paramI < MinMaxValues.XMeansImax + 1; paramI += 4)
                         {
                             _feature = "maximum overal iterations= " + paramI;
 
@@ -237,7 +239,8 @@ namespace Sussol_Analyse_Subproject
                             ModelVariedOrNestedData(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, "", "", "", "", paramH.ToString());
 
                     }
-                        break;
+                       
+                    break;
 
                 }
                 if (format.Equals("csv"))
@@ -260,21 +263,36 @@ namespace Sussol_Analyse_Subproject
             _results.Add(_length);
             if (_length == desiredClusters)
             { _featuresDesiredClusters.Add(_feature); }
-            if (algorithm == "canopy")
+            if (modellingtype.Equals("varied"))
             {
-                _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
-            } else if (algorithm == "som")
-            {
-                _view.ProgressUpdate(_amountOfModels, _somTotalVariedModels);
+                if (algorithm == "canopy")
+                {
+                    _view.ProgressUpdate(_amountOfModels, _canopyTotalVariedModels);
+                }
+                else if (algorithm == "som")
+                {
+                    _view.ProgressUpdate(_amountOfModels, _somTotalVariedModels);
+                }
+                else
+                {
+                    _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                }
             }
             else
             {
-                _view.ProgressUpdate(_amountOfModels, _xmeansTotalVariedModels);
+                if (algorithm == "canopy")
+                {
+                    _view.ProgressUpdate(_amountOfModels,_totalModelsToMake);
+                }
+                else if (algorithm == "som")
+                {
+                    _view.ProgressUpdate(_amountOfModels, _totalModelsToMake);
+                }
+                else
+                {
+                    _view.ProgressUpdate(_amountOfModels, _totalModelsToMake);
+                }
             }
-
-
-
-
 
             if (format.Equals("text"))
                 if (modellingtype.Equals("varied"))
@@ -322,9 +340,9 @@ namespace Sussol_Analyse_Subproject
                  _set = dataset.Split('\\').Last();
             }
             string datasetFinal = File.ReadAllText(dataset);
-            JObject jObject = new JObject();
+            
             string algorithmtype = ((AlgorithmName)algorithm).ToString();
-            string txtFileName = "";
+            
             string filename = algorithmtype + "results " + "nested parameters " + "dataset " + _set ;
             if (format.Equals("text")) { filename += ".txt"; }
             else{ _writer.CreateCsv(DedicatedMapCsvPath, algorithmtype, filename, dataset);}
@@ -333,29 +351,43 @@ namespace Sussol_Analyse_Subproject
          
          
             switch (algorithm) {
-
+                    
                 case AlgorithmName.CANOPY:
-                  for (var paramT1 = MinMaxValues.CanopyT1Min; paramT1 < MinMaxValues.CanopyT1Max + 1; paramT1 += 5)
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    for (var paramN = MinMaxValues.CanopyNmin; paramN < MinMaxValues.CanopyNmax; paramN++)
                     {
-                        for (var paramT2 = MinMaxValues.CanopyT2Min; paramT2 < MinMaxValues.CanopyT2Max + 1; paramT2 += 5)
+                    for (var paramT1 = MinMaxValues.CanopyT1Min; paramT1 < MinMaxValues.CanopyT1Max + 1; paramT1 += 5)
+                    {
+                        for (var paramT2 = MinMaxValues.CanopyT2Min;paramT2 < MinMaxValues.CanopyT2Max + 1;paramT2 += 5)
                         {
-                            for (var paramMaxCandidates = MinMaxValues.CanopyMaxCandidatesMin; paramMaxCandidates < MinMaxValues.CanopyMaxCandidatesMax + 1; paramMaxCandidates += 5)
+                            for (var paramMaxCandidates = MinMaxValues.CanopyMaxCandidatesMin;paramMaxCandidates < MinMaxValues.CanopyMaxCandidatesMax + 1;paramMaxCandidates += 5)
                             {
-                                _totalModelsToMake = (((MinMaxValues.CanopyT1Max+5) / 5)+1) * ((MinMaxValues.CanopyT2Max / 5)+1) * ((MinMaxValues.CanopyMaxCandidatesMax / 5)-1);
-                                _feature = "No. of clusters= " + desiredClusters + " No. of candidates= " + paramMaxCandidates + " T2 distance= " + paramT2 + "T1 distance= " + paramT1;
-                                ModelVariedOrNestedData(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, desiredClusters.ToString(), paramT1.ToString(), paramT2.ToString(), paramMaxCandidates.ToString(), "");
+                                if (paramN != 0)
+                                {
+                                    _totalModelsToMake = (MinMaxValues.CanopyNmax + 1) * (((MinMaxValues.CanopyT1Max + 5) / 5) + 1) * ((MinMaxValues.CanopyT2Max / 5) + 1) *((MinMaxValues.CanopyMaxCandidatesMax / 5) - 1);
+                                    _feature = "No. of clusters= " + paramN + " No. of candidates= " + paramMaxCandidates + " T2 distance= " + paramT2 + "T1 distance= " + paramT1;
+                                    ModelVariedOrNestedData(modellingtype, "canopy", dataset, format, desiredClusters,datasetFinal, paramN.ToString(), paramT1.ToString(), paramT2.ToString(),paramMaxCandidates.ToString(), "");
+
+                                    }
+                                   
+
                             }
                         }
                     }
-                   break;
+                    }
+
+            var elapsedMs = watch.ElapsedMilliseconds;
+                    watch.Stop();
+            break;
                 case AlgorithmName.SOM:
-                  for (var paramL = MinMaxValues.SomLmin; paramL < MinMaxValues.SomLmax + 0.001; paramL += 0.09998888)
+
+                    for (var paramL = MinMaxValues.SomLmin; paramL < MinMaxValues.SomLmax + 0.001; paramL += 0.09998888)
                     {
                         for (var paramH = MinMaxValues.SomHmin; paramH < MinMaxValues.SomHmax+1; paramH += 1)
                         {
                             for (var paramW = MinMaxValues.SomWmin; paramW < MinMaxValues.SomWmax+1; paramW += 1)
                             {
-                                _totalModelsToMake = (int)((MinMaxValues.SomLmax+0.001) / 0.09998888)  * (MinMaxValues.SomHmax-1)  * (MinMaxValues.SomWmax-1);
+                                _totalModelsToMake = (int)(((MinMaxValues.SomLmax+0.001) / 0.09998888)+1)  * (MinMaxValues.SomHmax-1)  * (MinMaxValues.SomWmax-1);
 
                                 if (paramW < paramH)
                                 {
@@ -375,9 +407,11 @@ namespace Sussol_Analyse_Subproject
                       
                         }
                     }
-                   break;
+                
+                    break;
                 case AlgorithmName.XMEANS:
-                  for (var paramI = MinMaxValues.XMeansImin; paramI < MinMaxValues.XMeansImax + 1; paramI += 4)
+
+                    for (var paramI = MinMaxValues.XMeansImin; paramI < MinMaxValues.XMeansImax + 1; paramI += 4)
                     {
                         for (var paramM = MinMaxValues.XMeansMmin; paramM < MinMaxValues.XMeansMmax + 1; paramM +=499)
                         {
@@ -399,7 +433,8 @@ namespace Sussol_Analyse_Subproject
                         }
                        
                     }
-                   break;
+       
+                    break;
                     
             }
             if (format.Equals("csv"))

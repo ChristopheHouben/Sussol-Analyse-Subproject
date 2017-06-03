@@ -1,4 +1,4 @@
-﻿namespace Sussol_Analyse_Subproject.Analyses
+﻿namespace Sussol_Analyse_Subproject.Domain
 {
     public enum AlgorithmName
     {

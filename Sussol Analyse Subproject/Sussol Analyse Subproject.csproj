@@ -161,22 +161,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Analyses\ClusterDistanceCenter.cs" />
+    <Compile Include="Domain\ClusterDistanceCenter.cs" />
     <Compile Include="Utils\IThreadAwareView.cs" />
     <Compile Include="Utils\JsonHelper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Analyses\Algorithm.cs" />
-    <Compile Include="Analyses\AlgorithmName.cs" />
-    <Compile Include="Analyses\Cluster.cs" />
-    <Compile Include="Analyses\Feature.cs" />
-    <Compile Include="Analyses\MinMaxValues.cs" />
-    <Compile Include="Analyses\Model.cs" />
-    <Compile Include="Analyses\Solvent.cs" />
-    <Compile Include="Analyses\TrainingSet.cs" />
-    <Compile Include="Analyses\VectorData.cs" />
+    <Compile Include="Domain\Algorithm.cs" />
+    <Compile Include="Domain\AlgorithmName.cs" />
+    <Compile Include="Domain\Cluster.cs" />
+    <Compile Include="Domain\Feature.cs" />
+    <Compile Include="Domain\MinMaxValues.cs" />
+    <Compile Include="Domain\Model.cs" />
+    <Compile Include="Domain\Solvent.cs" />
+    <Compile Include="Domain\TrainingSet.cs" />
+    <Compile Include="Domain\VectorData.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -188,7 +188,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModelService.cs" />
+    <Compile Include="Analyses\ModelService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

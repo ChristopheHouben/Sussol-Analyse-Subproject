@@ -65,7 +65,7 @@ namespace Sussol_Analyse_Subproject.Utils
             wsAllClusters.Cells[1, 1] = algorithm + "results";
             wsAllClusters.Cells[1, 2] = "Dataset: " + setname;
             wsAllClusters.Cells[1, 3] = "Generated on: " + DateTime.Now;
-           
+            wsAllClusters.Cells[2, 1] = "All models";
             wsAllClusters.Cells[2, 2] = "Number of clusters";
             
             wsDesiredClusters.Cells[1, 1] = algorithm + "results";
@@ -89,7 +89,7 @@ namespace Sussol_Analyse_Subproject.Utils
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 obj = null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 obj = null;
 

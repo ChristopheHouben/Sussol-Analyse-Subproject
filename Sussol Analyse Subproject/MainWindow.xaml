@@ -14,22 +14,22 @@
         <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Width="800" Margin="0,0,0,0" Height="150">
         <GroupBox x:Name="GroupBoxAlgorithms" HorizontalContentAlignment="Center" Header="Select the desired algorithm" Foreground="White" HorizontalAlignment="Left" Height="150" Margin="0,0,0,0" VerticalAlignment="Top" Width="225" FontSize="16">
             <Grid>
-                <RadioButton x:Name="CheckBoxCanopy" Content="Canopy" HorizontalAlignment="Center" Foreground="White" Margin="0,15,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
-                <RadioButton x:Name="CheckBoxSom" Content="SOM" HorizontalAlignment="Center" Foreground="White" Margin="0,50,20,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
-                <RadioButton x:Name="CheckBoxXmeans" Content="Xmeans" HorizontalAlignment="Center" Foreground="White" Margin="0,85,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbCanopy" Content="Canopy" HorizontalAlignment="Center" Foreground="White" Margin="0,15,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbSom" Content="SOM" HorizontalAlignment="Center" Foreground="White" Margin="0,50,20,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbXmeans" Content="Xmeans" HorizontalAlignment="Center" Foreground="White" Margin="0,85,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
 
             </Grid>
         </GroupBox>
         <GroupBox x:Name="GroupBoxModelType" Header="Select the desired modelling type" Foreground="White" HorizontalAlignment="Left" Height="150" Margin="50,0,0,0" VerticalAlignment="Top" Width="255" FontSize="16" >
             <Grid>
-                <RadioButton x:Name="CheckBoxVaried" Content="Varied" HorizontalAlignment="Center" Foreground="White" Margin="0,25,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
-                <RadioButton x:Name="CheckBoxNested" Content="Nested" HorizontalAlignment="Center" Foreground="White" Margin="5,70,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbVaried" Content="Varied" HorizontalAlignment="Center" Foreground="White" Margin="0,25,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbNested" Content="Nested" HorizontalAlignment="Center" Foreground="White" Margin="5,70,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
             </Grid>
         </GroupBox>
         <GroupBox x:Name="GroupBoxFormat" Header="Select the desired format" HorizontalAlignment="Left" Foreground="White"  Height="150" Margin="50,0,0,0" VerticalAlignment="Top" Width="220" FontSize="16">
             <Grid>
-                <RadioButton x:Name="CheckBoxRawData" Content="Raw data" HorizontalAlignment="Center" Foreground="White" Margin="0,25,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
-                <RadioButton x:Name="CheckBoxCsv" Content="Csv" HorizontalAlignment="Center" Foreground="White" Margin="0,70,40,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbRawData" Content="Raw data" HorizontalAlignment="Center" Foreground="White" Margin="0,25,0,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
+                <RadioButton x:Name="RdbCsv" Content="Csv" HorizontalAlignment="Center" Foreground="White" Margin="0,70,40,0" VerticalAlignment="Top" Click="SetButtonVisibility" IsEnabled="False" />
             </Grid>
         </GroupBox>
            </WrapPanel>

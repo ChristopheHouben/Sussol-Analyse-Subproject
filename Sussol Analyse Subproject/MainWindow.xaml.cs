@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 
 using System.Windows.Forms;
 using System.Threading;
+using Sussol_Analyse_Subproject.Analyses;
 using Sussol_Analyse_Subproject.Utils;
 using Cursors = System.Windows.Input.Cursors;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
@@ -69,34 +70,34 @@ namespace Sussol_Analyse_Subproject
             LblProgress.Content = "Creating your results! One moment please";
             var value = int.Parse(TxtBoxDesiredClusters.Text);
             //algorithm checkboxes
-            if (CheckBoxCanopy.IsChecked != null && CheckBoxCanopy.IsChecked.Value)
+            if (RdbCanopy.IsChecked != null && RdbCanopy.IsChecked.Value)
                 {
                     _algorithmsUsed.Add("canopy");
                 }
-                if (CheckBoxSom.IsChecked != null && CheckBoxSom.IsChecked.Value)
+                if (RdbSom.IsChecked != null && RdbSom.IsChecked.Value)
                 {
                     _algorithmsUsed.Add("som");
                 }
-                if (CheckBoxXmeans.IsChecked != null && CheckBoxXmeans.IsChecked.Value)
+                if (RdbXmeans.IsChecked != null && RdbXmeans.IsChecked.Value)
                 {
 
                     _algorithmsUsed.Add("xmeans");
                 }
                 //format checkboxes
-                if (CheckBoxCsv.IsChecked != null && CheckBoxCsv.IsChecked.Value)
+                if (RdbCsv.IsChecked != null && RdbCsv.IsChecked.Value)
                 {
                     _formats.Add("csv");
                 }
-                if (CheckBoxRawData.IsChecked != null && CheckBoxRawData.IsChecked.Value)
+                if (RdbRawData.IsChecked != null && RdbRawData.IsChecked.Value)
                 {
                     _formats.Add("raw");
                 }
                 //modellingtype checkboxes
-                if (CheckBoxVaried.IsChecked != null && CheckBoxVaried.IsChecked.Value)
+                if (RdbVaried.IsChecked != null && RdbVaried.IsChecked.Value)
                 {
                     _modellingtypes.Add("varied");
                 }
-                if (CheckBoxNested.IsChecked != null && CheckBoxNested.IsChecked.Value)
+                if (RdbNested.IsChecked != null && RdbNested.IsChecked.Value)
                 {
                     _modellingtypes.Add("nested");
                 }
@@ -117,13 +118,13 @@ namespace Sussol_Analyse_Subproject
             ButtonStart.IsEnabled = false;
             BtnOpenFile.IsEnabled = false;
             TxtBoxDesiredClusters.IsEnabled = false;
-            CheckBoxCanopy.IsEnabled = false;
-            CheckBoxSom.IsEnabled = false;
-            CheckBoxXmeans.IsEnabled = false;
-            CheckBoxNested.IsEnabled = false;
-            CheckBoxVaried.IsEnabled = false;
-            CheckBoxCsv.IsEnabled = false;
-            CheckBoxRawData.IsEnabled = false;
+            RdbCanopy.IsEnabled = false;
+            RdbSom.IsEnabled = false;
+            RdbXmeans.IsEnabled = false;
+            RdbNested.IsEnabled = false;
+            RdbVaried.IsEnabled = false;
+            RdbCsv.IsEnabled = false;
+            RdbRawData.IsEnabled = false;
             }
 
 
@@ -132,11 +133,11 @@ namespace Sussol_Analyse_Subproject
         {
             ButtonStart.IsEnabled = false;
             
-                if (CheckBoxCanopy.IsChecked.Value || CheckBoxSom.IsChecked.Value || CheckBoxXmeans.IsChecked.Value)
+                if (RdbCanopy.IsChecked.Value || RdbSom.IsChecked.Value || RdbXmeans.IsChecked.Value)
                 {
-                    if (CheckBoxCsv.IsChecked.Value || CheckBoxRawData.IsChecked.Value)
+                    if (RdbCsv.IsChecked.Value || RdbRawData.IsChecked.Value)
                     {
-                        if (CheckBoxVaried.IsChecked.Value || CheckBoxNested.IsChecked.Value)
+                        if (RdbVaried.IsChecked.Value || RdbNested.IsChecked.Value)
                         {
                         if (TextBoxContent == true){
                             ButtonStart.IsEnabled = true;
@@ -160,13 +161,13 @@ namespace Sussol_Analyse_Subproject
                 LblDesiredClusters.Foreground = new SolidColorBrush(Colors.White);
                 LblDesiredClusters.FontSize = 16;
                 TextBoxContent = true;
-                CheckBoxCanopy.IsEnabled = true;
-                CheckBoxSom.IsEnabled = true;
-                CheckBoxXmeans.IsEnabled = true;
-                CheckBoxNested.IsEnabled = true;
-                CheckBoxVaried.IsEnabled = true;
-                CheckBoxCsv.IsEnabled = true;
-                CheckBoxRawData.IsEnabled = true;
+                RdbCanopy.IsEnabled = true;
+                RdbSom.IsEnabled = true;
+                RdbXmeans.IsEnabled = true;
+                RdbNested.IsEnabled = true;
+                RdbVaried.IsEnabled = true;
+                RdbCsv.IsEnabled = true;
+                RdbRawData.IsEnabled = true;
                 LblDesiredClusters.Content = "No. of desired clusters:";
                 LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
 
@@ -179,13 +180,13 @@ namespace Sussol_Analyse_Subproject
                 LblDesiredClusters.Content = "Please use a numeric value:";
                 LblDesiredClusters.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
                 TextBoxContent = false;
-                CheckBoxCanopy.IsEnabled = false;
-                CheckBoxSom.IsEnabled = false;
-                CheckBoxXmeans.IsEnabled = false;
-                CheckBoxNested.IsEnabled = false;
-                CheckBoxVaried.IsEnabled = false;
-                CheckBoxCsv.IsEnabled = false;
-                CheckBoxRawData.IsEnabled = false;
+                RdbCanopy.IsEnabled = false;
+                RdbSom.IsEnabled = false;
+                RdbXmeans.IsEnabled = false;
+                RdbNested.IsEnabled = false;
+                RdbVaried.IsEnabled = false;
+                RdbCsv.IsEnabled = false;
+                RdbRawData.IsEnabled = false;
             }
         }
 
@@ -228,6 +229,7 @@ namespace Sussol_Analyse_Subproject
             Dispatcher.Invoke(() =>
             {
                 LblProgress.Content = "Writing your data to CSV ...";
+                LblPercentage.Content = "100%";
             });
         }
 

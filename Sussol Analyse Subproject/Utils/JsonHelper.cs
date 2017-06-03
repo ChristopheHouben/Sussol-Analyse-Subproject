@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Sussol_Analyse_Subproject.Analyses;
+using Sussol_Analyse_Subproject.Domain;
 
 namespace Sussol_Analyse_Subproject.Utils
 {
