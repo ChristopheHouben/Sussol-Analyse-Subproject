@@ -31,7 +31,6 @@ namespace Sussol_Analyse_Subproject.Utils
                     str.Write(jObject);
 
                 }
-
             }
         }
 
@@ -92,7 +91,6 @@ namespace Sussol_Analyse_Subproject.Utils
             catch (Exception)
             {
                 obj = null;
-
             }
             finally
             {
@@ -104,21 +102,12 @@ namespace Sussol_Analyse_Subproject.Utils
             this._view = view;
             view.WritingToCsv();
             string fullPath = Path.Combine(directory, excelfilename);
-
-
-            object missing = Type.Missing;
-
-            object misValue = System.Reflection.Missing.Value;
-
+           object misValue = System.Reflection.Missing.Value;
             //create excel
             Excel.Application excel = new Excel.Application();
-
             //add excel workbook
             Excel.Workbook wb = excel.Workbooks.Add();
-
             wb = excel.Workbooks.Open(fullPath, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-
-
             var ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
             var wsDesiredClusters = (Excel.Worksheet)wb.Worksheets.get_Item("Desired clusters");
 
@@ -134,10 +123,8 @@ namespace Sussol_Analyse_Subproject.Utils
                 wsDesiredClusters.Cells[ 3, 1] = "There are no parameters found for your desired no. of clusters.";
             }
             for (var o = 0; o < featuresDesiredClusters.Count(); o++) {
-
                 wsDesiredClusters.Cells[o + 3, 1] = featuresDesiredClusters[o];
                 wsDesiredClusters.Cells[o + 3, 2] = numberOfClusters;
-               
             }
             //Adjust all columns
             ws.Columns.AutoFit();
@@ -168,9 +155,7 @@ namespace Sussol_Analyse_Subproject.Utils
         {
             this._view = view;
             view.AddingGraph();
-
             object misValue = System.Reflection.Missing.Value;
-
             //create excel
             Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
 
@@ -181,7 +166,6 @@ namespace Sussol_Analyse_Subproject.Utils
             var ws = (Excel.Worksheet)wb.Worksheets.get_Item("All models");
             //add worksheets to workbook
             Excel.Worksheet ws2;
-
             bool found = false;
             // Loop through all worksheets in the workbook
             foreach (Excel.Worksheet sheet in wb.Sheets)

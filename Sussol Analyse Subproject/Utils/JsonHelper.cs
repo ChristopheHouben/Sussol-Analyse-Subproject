@@ -43,7 +43,7 @@ namespace Sussol_Analyse_Subproject.Utils
                     {
                         Value = vector.value,
                         //0.4.9 Changed to new Feature
-                        feature = new Feature()
+                        Feature = new Feature()
                         {
                             FeatureName = naam
                         }

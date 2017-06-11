@@ -162,6 +162,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Domain\ClusterDistanceCenter.cs" />
+    <Compile Include="Domain\TrainingSet.cs" />
+    <Compile Include="Domain\VectorData.cs" />
     <Compile Include="Utils\IThreadAwareView.cs" />
     <Compile Include="Utils\JsonHelper.cs" />
     <Page Include="MainWindow.xaml">
@@ -172,11 +174,9 @@
     <Compile Include="Domain\AlgorithmName.cs" />
     <Compile Include="Domain\Cluster.cs" />
     <Compile Include="Domain\Feature.cs" />
-    <Compile Include="Domain\MinMaxValues.cs" />
+    <Compile Include="Domain\MinMaxValue.cs" />
     <Compile Include="Domain\Model.cs" />
     <Compile Include="Domain\Solvent.cs" />
-    <Compile Include="Domain\TrainingSet.cs" />
-    <Compile Include="Domain\VectorData.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -1,6 +1,6 @@
 ﻿namespace Sussol_Analyse_Subproject.Domain
 {
-    public struct MinMaxValues
+    public struct MinMaxValue
     {
         public const int CanopyNmin = -1;
         public const int CanopyNmax = 25;
