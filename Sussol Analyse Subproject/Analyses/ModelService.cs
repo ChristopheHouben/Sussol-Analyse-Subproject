@@ -95,14 +95,14 @@ namespace Sussol_Analyse_Subproject.Analyses
                         _feature = "Number of Clusters = " + paramN;
                         if (paramN != 0)
                         {
-                            ProcessModelling(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, paramN.ToString(), "", "", "", "");
+                            ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, paramN.ToString(), "", "", "", "");
                         }
                     }
                     for (var paramNumberOfCandidates = MinMaxValue.CanopyMaxCandidatesMin; paramNumberOfCandidates < MinMaxValue.CanopyMaxCandidatesMax + 1; paramNumberOfCandidates++)
                     {
 
                         _feature = "Number of candidates= " + paramNumberOfCandidates.ToString();
-                        ProcessModelling(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, "", "", "", paramNumberOfCandidates.ToString(), "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", "", paramNumberOfCandidates.ToString(), "");
                     }
                     for (var paramT2 = MinMaxValue.CanopyT2Min; paramT2 < MinMaxValue.CanopyT2Max + 1; paramT2++)
                     {
@@ -110,7 +110,7 @@ namespace Sussol_Analyse_Subproject.Analyses
                         _feature = "T2= " + paramT2.ToString();
                         if (paramT2 != 0)
                         {
-                            ProcessModelling(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, "", "", paramT2.ToString(), "", "");
+                            ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", paramT2.ToString(), "", "");
 
                         }
                     }
@@ -120,13 +120,9 @@ namespace Sussol_Analyse_Subproject.Analyses
 
                         if (paramT1 != 0)
                         {
-
-
-                            ProcessModelling(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, "", paramT1.ToString(), "", "", "");
-
+                            ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", paramT1.ToString(), "", "", "");
+                            }
                         }
-
-                    }
                     break;
                 //vary the SOM algorithm by parameter
                 case AlgorithmName.SOM:
@@ -134,17 +130,17 @@ namespace Sussol_Analyse_Subproject.Analyses
                     {
                         _feature = " learning rate step= " + paramL;
                         var oString = paramL.ToString();
-                        ProcessModelling(modellingtype, "som", dataset, format, desiredClusters, datasetFinal, oString.Replace(',', '.'), "", "", "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, oString.Replace(',', '.'), "", "", "", "");
                     }
                     for (var paramH = MinMaxValue.SomHmin; paramH < MinMaxValue.SomHmax + 1; paramH++)
                     {
                         _feature = "height= " + paramH;
-                        ProcessModelling(modellingtype, "som", dataset, format, desiredClusters, datasetFinal, "", paramH.ToString(), "", "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", paramH.ToString(), "", "", "");
                     }
                     for (var paramW = MinMaxValue.SomWmin; paramW < MinMaxValue.SomWmax + 1; paramW++)
                     {
                         _feature = "width= " + paramW;
-                        ProcessModelling(modellingtype, "som", dataset, format, desiredClusters, datasetFinal, "", "", paramW.ToString(), "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", paramW.ToString(), "", "");
                     }
                     break;
                 //vary the X-means algorithm by parameter
@@ -152,28 +148,28 @@ namespace Sussol_Analyse_Subproject.Analyses
                     for (var paramI = MinMaxValue.XMeansImin; paramI < MinMaxValue.XMeansImax + 1; paramI += 4)
                     {
                         _feature = "Max overall it= " + paramI;
-                        ProcessModelling(modellingtype, "xmeans", dataset, format, desiredClusters, datasetFinal, paramI.ToString(), "", "", "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, paramI.ToString(), "", "", "", "");
 
                     }
                     for (var paramM = MinMaxValue.XMeansMmin; paramM < MinMaxValue.XMeansMmax + 2; paramM += 500)
                     {
                         _feature = "Max it in the kMeans loop in IP part= " + paramM;
-                        ProcessModelling(modellingtype, "xmeans", dataset, format, desiredClusters, datasetFinal, "", paramM.ToString(), "", "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", paramM.ToString(), "", "", "");
                     }
                     for (var paramJ = MinMaxValue.XMeansJmin; paramJ < MinMaxValue.XMeansJmax + 2; paramJ += 500)
                     {
                         _feature = "Max it in the kMeans loop in IS part=" + paramJ;
-                        ProcessModelling(modellingtype, "xmeans", dataset, format, desiredClusters, datasetFinal, "", "", paramJ.ToString(), "", "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", paramJ.ToString(), "", "");
                     }
                     for (var paramL = MinMaxValue.XMeansLmin; paramL < MinMaxValue.XMeansLmax + 1; paramL += 2)
                     {
                         _feature = "Min clusters= " + paramL;
-                        ProcessModelling(modellingtype, "xmeans", dataset, format, desiredClusters, datasetFinal, "", "", "", paramL.ToString(), "");
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", "", paramL.ToString(), "");
                     }
                     for (var paramH = MinMaxValue.XMeansHmin; paramH < MinMaxValue.XMeansHmax + 1; paramH += 5)
                     {
                         _feature = "Max clusters= " + paramH;
-                        ProcessModelling(modellingtype, "canopy", dataset, format, desiredClusters, datasetFinal, "", "", "", "", paramH.ToString());
+                        ProcessModelling(modellingtype, algorithmtype.ToLower(), dataset, format, desiredClusters, datasetFinal, "", "", "", "", paramH.ToString());
                     }
                     break;
             }
@@ -285,7 +281,7 @@ namespace Sussol_Analyse_Subproject.Analyses
             Clearlists();
         }
 
-        private JObject ProcessModelling(string modellingtype, string algorithm, string dataset, string format, int desiredClusters, string datasetFinal, string param1, string param2, string param3, string param4, string param5)
+        private JObject ProcessModelling(string modellingtype, string algorithm, string datasetPath, string format, int desiredClusters, string datasetFinal, string param1, string param2, string param3, string param4, string param5)
         {
             JObject jObject = ModelData(algorithm, datasetFinal, param1, param2, param3, param4, param5);
             JArray items = (JArray)jObject["clusters"];
@@ -298,7 +294,7 @@ namespace Sussol_Analyse_Subproject.Analyses
 
             if (format.Equals("text"))
             {
-                WriteVariedOrNestedText(modellingtype, algorithm, dataset, jObject);
+                WriteVariedOrNestedText(modellingtype, algorithm, datasetPath, jObject);
             }
 
 

@@ -34,7 +34,7 @@ namespace Sussol_Analyse_Subproject
 
         }
         
-        ModelService ms = new ModelService();
+        
         string path = "";
         readonly List<string> _algorithmsUsed = new List<string>();
         readonly List<string> _formats = new List<string>();
@@ -110,7 +110,8 @@ namespace Sussol_Analyse_Subproject
                         foreach (var modellingtype in _modellingtypes)
                         {
                         IThreadAwareView view = this;
-                            ms.QueueGetResults(path, format, algo, modellingtype, value, view);
+                            ModelService ms = new ModelService(algo);
+                        ms.QueueGetResults(path, format,  modellingtype, value, view);
                         }
                     }
                 }
