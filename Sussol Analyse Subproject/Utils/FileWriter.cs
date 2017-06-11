@@ -168,7 +168,6 @@ namespace Sussol_Analyse_Subproject.Utils
         {
             this._view = view;
             view.AddingGraph();
-            object missing = Type.Missing;
 
             object misValue = System.Reflection.Missing.Value;
 
@@ -206,14 +205,8 @@ namespace Sussol_Analyse_Subproject.Utils
                 ws2 = (Excel.Worksheet)wb.Worksheets.Add();
                 ws2.Name = ("Graphical representation");
             }
-
-
             //Adjust all columns
             ws.Columns.AutoFit();
-
-            //freeze top row
-            // ws.Application.ActiveWindow.FreezePanes = true;
-
             //insert graph into worsheet 2
             Excel.Range chartRange;
 
@@ -221,7 +214,7 @@ namespace Sussol_Analyse_Subproject.Utils
             Excel.ChartObject myChart = (Excel.ChartObject)xlCharts.Add(10, 80, 2000, 500);
             Excel.Chart chartPage = myChart.Chart;
 
-            chartRange = ws.get_Range("A2", "B" + counter);
+            chartRange = ws.get_Range("A2", "B" + (counter+2));
             chartPage.SetSourceData(chartRange, misValue);
             chartPage.ChartType = Excel.XlChartType.xlColumnClustered;
             chartPage.HasTitle = true;

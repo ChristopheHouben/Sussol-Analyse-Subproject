@@ -25,9 +25,9 @@
         public const double SomLmin = 0.001;
         public const double SomLmax = 0.9;
         public const int SomHmin = 2;
-        public const int SomHmax = 4;
+        public const int SomHmax = 3;
         public const int SomWmin = 2;
-        public const int SomWmax = 6;
+        public const int SomWmax = 3;
 
     }
 }
